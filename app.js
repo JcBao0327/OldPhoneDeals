@@ -53,36 +53,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 const adminUsername = config.admin.username;
 const adminPassword = config.admin.password;
 
-// Routes
-app.get('/', (req, res) => {
-    res.render('index', { isAdmin: req.session.isAdmin || false });
-});
-
-app.get('/admin', (req, res) => {
-    if (!req.session.isAdmin) {
-        return res.status(401).send('Unauthorized');
-    }
-    res.send('Welcome Admin');
-});
-
-app.post('/admin-login', (req, res) => {
-    const { username, password } = req.body;
-    if (username === adminUsername && password === adminPassword) {
-        req.session.isAdmin = true;
-        res.redirect('/admin');
-    } else {
-        res.status(401).send('Unauthorized');
-    }
-});
-
-app.get('/admin-logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Session destruction error:', err);
-        }
-        res.redirect('/');
-    });
-});
 
 // Start Server
 const PORT = config.app.port || 3000;
