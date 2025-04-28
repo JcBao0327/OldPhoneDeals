@@ -1,0 +1,10 @@
+app:
+  port: 3000
+  env: development
+  sessionSecret: mySuperSecret
+  mongoUri: mongodb://localhost:27017/oldphonedeals
+  defaultPassword: SecurePass1!
+
+admin:
+  username: admin
+  password: admin123
