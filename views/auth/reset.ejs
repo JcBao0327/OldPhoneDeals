@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reset Password - OldPhoneDeals</title>
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+  <div id="resetContainer">
+    <h1>Reset password</h1>
+
+    <form id="resetRequestForm" class="auth-form" action="/auth/reset" method="POST">
+      <label for="emailInput">Email</label>
+      <input id="emailInput" name="email" type="email" placeholder="Email" required />
+
+      <div class="button-group">
+        <button id="cancelButton" type="button">Cancel</button>
+        <button id="sendResetButton" type="submit">Send email</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>
