@@ -1,0 +1,85 @@
+<!-- views/checkoutPage/cart.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart - OldPhoneDeals</title>
+    <link rel="stylesheet" href="/css/checkOut.css">
+</head>
+<body>
+    <header>
+        <button onclick="handleBack()">←</button>
+        <h2>Cart</h2>
+    </header>
+
+    <p>Cart Items: <%= cartItems.length %></p>
+    <p>User: <%= user.name %></p>
+
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Update</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (cartItems.length === 0) { %>
+                    <tr>
+                        <td colspan="5">Your cart is empty.</td>
+                    </tr>
+                <% } else { %>
+                    <% cartItems.forEach(function(item) { %>
+                        <tr class="cart-item" data-price="<%= item.price %>">
+                            <td><%= item.title %></td>
+                            <td>$<%= item.price.toFixed(2) %></td>
+                            <td>
+                                <input 
+                                    id="quantity-<%= item._id %>"
+                                    class="quantity-input"
+                                    type="number"
+                                    name="quantity"
+                                    value="<%= item.quantity %>"
+                                    min="0"
+                                    required
+                                >
+                            </td>
+                            <td>
+                                <form id="update-form-<%= item._id %>" action="/cart/update/<%= item._id %>" method="POST">
+                                    <input type="hidden" name="quantity" id="hidden-qty-<%= item._id %>">
+                                    <button type="button" onclick="updateQuantity('<%= item._id %>')">Update</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/checkout/remove/<%= item._id %>" method="POST">
+                                    <input type="hidden" name="buyer" value="<%= user._id %>">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+        </table>
+
+        <section>
+            <h2>Total: <span id="total-amount">$<%= totalPrice.toFixed(2) %></span></h2>
+        </section>
+
+        <section>
+            <% if (cartItems.length > 0) { %>
+                <form action="/checkout/transaction" method="POST">
+                    <input type="hidden" name="buyer" value="<%= user._id %>">
+                    <button type="submit" id="checkout-btn" onclick="confirmTransaction()">Check Out</button>
+                </form>
+            <% } %>
+        </section>
+    </main>
+    <script src="/js/checkOut.js"></script>
+</body>
+</html>
+
+

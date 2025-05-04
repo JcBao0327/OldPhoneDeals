@@ -9,6 +9,7 @@ const debug = require('debug')('app');
 const path = require('path');
 const dotenv = require('dotenv');
 const YAML = require('yamljs');
+const checkOutRoute = require('./routes/checkOutRoute');
 
 // Custom Utils
 const connectDB = require('./models/db');
@@ -34,6 +35,8 @@ if (config.app.env === 'development') {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use('/checkout', checkOutRoute);
 
 app.use(session({
     secret: config.app.sessionSecret,
