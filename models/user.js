@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
-  createdDate: { type: Date, default: Date.now },
   lastLoginDate: { type: Date, default: null },
   isDisabled: { type: Boolean, default: false },
   verificationToken: String,
@@ -303,5 +302,41 @@ userSchema.methods.refreshWishlistAvailability = async function(session) {
   }
 };
 
+// --- User Methods ---
+/**
+ * NOTE: Before calling this method, make sure all input values are properly validated and preprocessed
+ */
+// 01 create new account
+userSchema.statics.createUserDirect = async function ({ email, password, firstname, lastname, verificationToken}) {
+  const user = new this({
+    email,
+    password,
+    firstname,
+    lastname,
+    isVerified: false,
+    lastLoginDate: null,
+    verificationToken,
+    resetPasswordToken: null,
+    resetPasswordExpires: null,
+    cart: [],
+    wishlist: []
+  });
+
+  return await user.save();
+};
+
+// 02 update an existing account
+userSchema.statics.updateUserDirect = async function ({ userId, updateFields }) {
+  return await this.findByIdAndUpdate(
+    userId,
+    updateFields,
+    { new: true }
+  );
+};
+
+// 03 delete an existing account
+userSchema.statics.deleteUserDirect = async function ({ userId}) {
+  return await this.findByIdAndDelete(userId);
+};
 
 module.exports = mongoose.model('User', userSchema);
