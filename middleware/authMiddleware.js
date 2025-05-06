@@ -15,7 +15,7 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, config.app.jwtSecret);
     const user = await User.findById(decoded.userId);
 
     if (!user || user.isDisabled) {
