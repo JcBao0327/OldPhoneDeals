@@ -47,11 +47,25 @@
     color: black;
   }
 
+  .auth-button-group {
+    display: flex;
+    gap: 16px; 
+    justify-content: center;
+    margin-top: 20px;
+  }
+
   /* ======= Sign In Page ======= */
 #signinContainer {
     max-width: 400px;
     margin: 0 auto;
     text-align: left;
+  }
+
+    /* auth.css 中 */
+  .error-text {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
   }
   
   .auth-form {

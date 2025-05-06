@@ -7,12 +7,19 @@
 </head>
 <body>
   <div class="container">
-    <button id="backToPrevPage" type="button" onclick="history.back()">←</button>
-
+    <button id="backToPrevPage" type="button" onclick="history.back()">⟵</button>
+  
     <h1>Welcome to <br> OldPhoneDeals</h1>
 
-    <button id="signInButton" type="button">Sign in</button>
-    <button id="signUpButton" type="button">Sign up</button>
+    <div class="auth-button-group">
+      <a href="/auth/signin">
+        <button type="button">Sign in</button>
+      </a>
+    
+      <a href="/auth/signup">
+        <button type="button">Sign up</button>
+      </a>
+    </div>
   </div>
 
   <script src="/js/auth.js"></script>
