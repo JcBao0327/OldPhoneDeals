@@ -1,4 +1,4 @@
-<!-- views/checkoutPage/cart.ejs -->
+<!-- views/checkout/cart.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,22 +8,24 @@
 </head>
 <body>
     <header>
-        <button onclick="handleBack()">←</button>
+        <button onclick="handleBacktoMain()">←</button>
         <h2>Cart</h2>
     </header>
 
-    <p>Cart Items: <%= cartItems.length %></p>
-    <p>User: <%= user.name %></p>
+    <p>Hi! <%= user.name %></p>
+    <p>You has <%= cartItems.length %> items in your cart.</p>
 
     <main>
         <table>
             <thead>
                 <tr>
+                    <th>Image</th>
                     <th>Title</th>
+                    <th>Brand</th>
                     <th>Price</th>
                     <th>Quantity</th>
-                    <th>Update</th>
-                    <th>Remove</th>
+                    <th>Modify</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,10 +36,12 @@
                 <% } else { %>
                     <% cartItems.forEach(function(item) { %>
                         <tr class="cart-item" data-price="<%= item.price %>">
+                            <td><img src="<%= item.image %>" alt="<%= item.title %>" width="60"></td>
                             <td><%= item.title %></td>
+                            <td><%= item.brand %></td>
                             <td>$<%= item.price.toFixed(2) %></td>
                             <td>
-                                <input 
+                                <input
                                     id="quantity-<%= item._id %>"
                                     class="quantity-input"
                                     type="number"

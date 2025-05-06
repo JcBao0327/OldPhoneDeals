@@ -1,94 +1,104 @@
 const mongoose = require('mongoose');
+const User = require('./user');
+const PhoneListing = require('./phoneListing');
 
 const transactionSchema = new mongoose.Schema({
-    buyer:  { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
-    },
-    items: [
-        {
-            title: String,
-            price: Number,
-            quantity: Number
-        }
-    ],
-    totalAmount: Number,
-    isFinalized: {
-        type: Boolean,
-        default: false // Indicates whether this is a finalized transaction or a cart
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
+  buyer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  items: [
+    {
+      item: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PhoneListing',
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true
+      },
+      price: {
+        type: Number,
+        required: true
+      }
     }
+  ],
+  totalAmount: {
+    type: Number,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-// Add an item to the cart
-transactionSchema.statics.addItemToCart = async function(userId, item) {
-    let cart = await this.findOne({ buyer: userId, isFinalized: false });
-    if (!cart) {
-        cart = await this.create({ buyer: userId, items: [], totalAmount: 0, isFinalized: false });
-    }
-    const existingItem = cart.items.find(cartItem => cartItem.title === item.title);
-    if (existingItem) {
-        existingItem.quantity += item.quantity;
-    } else {
-        cart.items.push(item);
-    }
-    await cart.save();
-    return cart;
-};
+// Static method: Create a new transaction from a user's cart
+transactionSchema.statics.createTransaction = async function(buyerId, session) {
 
-// Remove an item from the cart
-transactionSchema.statics.removeItemFromCart = async function(userId, itemId) {
-    const cart = await this.findOne({ buyer: userId, isFinalized: false });
-    if (!cart) throw new Error('Cart not found');
+  const user = await User.findById(buyerId).session(session).populate('cart.item');
 
-    cart.items = cart.items.filter(item => {
-        const id = item._id ?? item.id;
-        return id?.toString() !== itemId.toString();
+  if (!user) {
+    return { success: false, reason: 'User not found' };
+  }
+
+  const updatedItems = [];
+  let totalAmount = 0;
+
+  for (const cartItem of user.cart) {
+    const phone = await PhoneListing.findById(cartItem.item._id).session(session);
+
+    if (!phone) {
+      return { success: false, reason: `Phone listing ${cartItem.item._id} not found` };
+    }
+
+    if (phone.disabled || phone.stock === 0) {
+      return { success: false, reason: `Phone ${phone.title} is unavailable or out of stock` };
+    }
+
+    if (phone.stock < cartItem.quantity) {
+      return { success: false, reason: `Not enough stock for ${phone.title}` };
+    }
+
+    // Prepare transaction item
+    updatedItems.push({
+      item: phone._id,
+      quantity: cartItem.quantity,
+      price: phone.price
     });
 
-    await cart.save();
-    return cart;
+    totalAmount += phone.price * cartItem.quantity;
+
+    // Decrease stock
+    phone.stock -= cartItem.quantity;
+    await phone.save({ session });
+  }
+
+  // Clear user cart
+  user.cart = [];
+  await user.save({ session });
+
+  // Create transaction
+  const transaction = await this.create([{
+    buyer: buyerId,
+    items: updatedItems,
+    totalAmount
+  }], { session });
+
+  return { success: true, transaction: transaction[0] };
 };
 
 
-// Get cart items for a user
-transactionSchema.statics.getCartItems = async function(userId) {
-    const cart = await this.findOne({ buyer: userId, isFinalized: false });
-    return cart ? cart.items : [];
-};
-
-// Calculate total amount for the cart
-transactionSchema.statics.calculateTotalAmount = async function(userId) {
-    const cart = await this.findOne({ buyer: userId, isFinalized: false });
-    if (!cart) return 0;
-    return cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
-};
-
-// Finalize the cart as a transaction
-transactionSchema.statics.finalizeCart = async function(userId) {
-    const cart = await this.findOne({ buyer: userId, isFinalized: false });
-    if (!cart) throw new Error('Cart not found');
-    if (!cart.isFinalized || cart.totalAmount === 0) {
-        cart.totalAmount = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
-    }
-    cart.isFinalized = true;
-    await cart.save();
-    return cart;
-};
-
-// Create a new transaction
-transactionSchema.statics.addTransaction = async function(data) {
-    return await this.create({
-        buyer: data.buyer,
-        items: data.items,
-        totalAmount: data.totalAmount
-    });
+// Admin: Get all transactions
+transactionSchema.statics.getAllTransactions = async function () {
+    return this.find()
+    .populate('buyer', 'firstname lastname email')
+    .populate('items.item', 'title price')
+    .sort({ createdAt: -1 });
 };
 
 const Transaction = mongoose.model('Transaction', transactionSchema, 'transactionList');
 
 module.exports = Transaction;
-

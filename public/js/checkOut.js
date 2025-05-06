@@ -1,5 +1,5 @@
 // Handle back button click
-    function handleBack() {
+    function handleBacktoMain() {
     document.body.innerHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
             <h2>Check out succeeded</h2>
