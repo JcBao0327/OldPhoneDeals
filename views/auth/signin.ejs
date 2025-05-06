@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign In - OldPhoneDeals</title>
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+  <div id="signinContainer">
+    <button id="backToAuth" type="button">←</button>
+
+    <h1>Sign in Page</h1>
+
+    <form id="signInForm" class="auth-form" action="/auth/signin" method="POST">
+      <label for="emailInput">Email</label>
+      <input id="emailInput" name="email" type="email" placeholder="Email" required />
+
+      <label for="passwordInput">Password</label>
+      <input id="passwordInput" name="password" type="password" placeholder="Password" required />
+
+      <button id="signInButton" type="submit">Sign In</button>
+    </form>
+
+    <div class="auth-links">
+      <a id="forgotPasswordLink" href="/auth/reset">Forgot password?</a>
+      <a id="signUpLink" href="/auth/signup">Sign up</a>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>

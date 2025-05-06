@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign Up - OldPhoneDeals</title>
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+  <div id="signupContainer">
+    <button id="backToAuth" type="button">←</button>
+
+    <h1>Sign up Page</h1>
+
+    <form id="signUpForm" class="auth-form" action="/auth/signup" method="POST">
+      <label for="emailInput">Email</label>
+      <input id="emailInput" name="email" type="email" placeholder="Email" required />
+
+      <label for="passwordInput">Password</label>
+      <input id="passwordInput" name="password" type="password" placeholder="Password" required />
+
+      <label for="confirmPasswordInput">Confirm Password</label>
+      <input id="confirmPasswordInput" name="confirmPassword" type="password" placeholder="Confirm password" required />
+
+      <label for="firstNameInput">First name</label>
+      <input id="firstNameInput" name="firstname" type="text" placeholder="First name" required />
+
+      <label for="lastNameInput">Last name</label>
+      <input id="lastNameInput" name="lastname" type="text" placeholder="Last name" required />
+
+      <button id="signUpButton" type="submit">Send verification email</button>
+    </form>
+
+    <div class="auth-links">
+      <a id="signInLink" href="/auth/signin">Already having an account? Sign in here</a>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>

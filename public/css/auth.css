@@ -1,0 +1,163 @@
+/* ================================
+   Auth Common Styles
+   ================================ */
+   body {
+    font-family: sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  button {
+    font-size: 16px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  /* ================================
+     Auth Home Page
+     ================================ */
+#authHomeContainer {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+  
+  #signInButton,
+  #signUpButton {
+    background-color: #333;
+    color: white;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  #backToPrevPage {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 20px;
+    background: none;
+    color: black;
+  }
+
+  /* ======= Sign In Page ======= */
+#signinContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  .auth-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  
+  .auth-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .auth-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  #signInButton {
+    width: 100%;
+    background-color: #333;
+    color: white;
+  }
+  
+  .auth-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .auth-links a {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+  }
+
+  /* ======= Sign Up Page ======= */
+  #signupContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  #signUpButton {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    margin-top: 20px;
+  }
+
+  /* ======= Reset Password Page ======= */
+#resetContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  #cancelButton {
+    background-color: #ccc;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #sendResetButton {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ======= Reset Verified Page ======= */
+#resetVerifiedContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  #resetPasswordButton {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+  }
+
+  /* ======= Email Verified Page ======= */
+#emailVerifiedContainer {
+    max-width: 500px;
+    margin: 100px auto;
+    text-align: center;
+  }
