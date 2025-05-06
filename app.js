@@ -36,6 +36,8 @@ if (config.app.env === 'development') {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use('/auth', authRoutes);
+app.use('/checkout', checkOutRoute);
 
 app.use(session({
     secret: config.app.sessionSecret,
