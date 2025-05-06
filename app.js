@@ -10,7 +10,6 @@ const path = require('path');
 const dotenv = require('dotenv');
 const YAML = require('yamljs');
 const authRoutes = require('./routes/authRoute');
-
 const checkOutRoute = require('./routes/checkOutRoute');
 
 // Custom Utils
