@@ -60,5 +60,24 @@ phoneSchema.statics.searchPhones = async function (keyword) {
   });
 };
 
+phoneSchema.statics.createListing = async function (data) {
+  return await this.create(data);
+};
+
+phoneSchema.statics.updateListingByOwner = async function (phoneId, userId, updateFields) {
+  return await this.findOneAndUpdate(
+      { _id: phoneId, seller: userId },
+      updateFields,
+      { new: true }
+  );
+};
+
+phoneSchema.statics.deleteListingByOwner = async function (phoneId, userId) {
+  return await this.findOneAndDelete({ _id: phoneId, seller: userId });
+};
+
+phoneSchema.statics.getListingsByUser = async function (userId) {
+  return await this.find({ seller: userId });
+};
 
 module.exports = mongoose.model('PhoneListing', phoneSchema);
