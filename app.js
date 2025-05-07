@@ -33,11 +33,9 @@ if (config.app.env === 'development') {
     app.use(morgan('dev'));
 }
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 app.use(cookieParser());
-app.use('/auth', authRoutes);
-app.use('/checkout', checkOutRoute);
 
 app.use(session({
     secret: config.app.sessionSecret,
@@ -52,11 +50,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 // Extract Admin Credentials from Config
 const adminUsername = config.admin.username;
 const adminPassword = config.admin.password;
 
+app.use('/auth', authRoutes);
+app.use('/checkout', checkOutRoute);
 
 // Start Server
 const PORT = config.app.port || 3000;

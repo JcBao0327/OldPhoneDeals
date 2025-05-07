@@ -14,7 +14,11 @@
 
     <p>Hi! <%= user.name %></p>
     <p>You has <%= cartItems.length %> items in your cart.</p>
-
+    <% if (unavailableItems.length > 0) { %>
+        <p class="warning" style="color: red;">
+            The following items are no longer available: <%= unavailableItems.join(', ') %>
+        </p>
+    <% } %>
     <main>
         <table>
             <thead>

@@ -3,7 +3,7 @@ app:
   env: development
   sessionSecret: mySuperSecret
   mongoUri: mongodb://localhost:27017/oldphonedeals
-  defaultPassword: SecurePass1!
+  defaultPassword: "SecurePass1!"
 
 admin:
   username: admin

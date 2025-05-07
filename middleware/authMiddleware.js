@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/config.yaml'); 
 const User = require('../models/user');
+const path = require('path');
+const YAML = require('yamljs');
+
+// Load YAML config
+const config = YAML.load(path.join(__dirname, '../config/config.yaml'));
 
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.token;
@@ -19,7 +23,7 @@ const verifyToken = async (req, res, next) => {
       return res.status(403).redirect('/auth');
     }
 
-    req.user = user; 
+    req.user = user;
     next();
   } catch (err) {
     console.error('JWT verification failed:', err);

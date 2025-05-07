@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const checkOutController = require('../controllers/checkOutController');
+const verifyToken = require('../middleware/authMiddleware');
 
 // View current cart
-router.get('/cart', checkOutController.getCartItem);
-// Add item to cart
-router.post('/add', checkOutController.addItemToCart);
+router.get('/cart', verifyToken, checkOutController.getCartItem);
 // Update item quantity
-router.put('/update', checkOutController.updateItemQuantity);
+router.put('/update', verifyToken, checkOutController.updateItemQuantity);
 // Remove item from cart
-router.delete('/remove', checkOutController.removeItemFromCart);
+router.delete('/remove', verifyToken, checkOutController.removeItemFromCart);
 // Create transaction
-router.post('/transaction', checkOutController.createTransaction);
+router.post('/transaction', verifyToken, checkOutController.createTransaction);
 
 module.exports = router;
