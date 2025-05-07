@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const path = require('path');
-const YAML = require('yamljs');
+const path = require('path')
+const YAML = require('yamljs')
 
 // Load YAML config
 const config = YAML.load(path.join(__dirname, '../config/config.yaml'));
@@ -15,7 +15,7 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, config.app.jwtSecret);
     const user = await User.findById(decoded.userId);
 
     if (!user || user.isDisabled) {

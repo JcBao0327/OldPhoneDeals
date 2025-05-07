@@ -33,8 +33,6 @@ if (config.app.env === 'development') {
     app.use(morgan('dev'));
 }
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(session({
@@ -56,6 +54,10 @@ app.use(express.json());
 const adminUsername = config.admin.username;
 const adminPassword = config.admin.password;
 
+// Get JWT Secret Key
+const jwtSecret = config.jwtSecret; 
+
+// Routes
 app.use('/auth', authRoutes);
 app.use('/checkout', checkOutRoute);
 
