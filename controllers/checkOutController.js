@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 // const PhoneListing = require('../models/phoneListing');
 const Transaction = require('../models/transaction');
@@ -26,6 +27,11 @@ exports.getCartItem = async (req, res) => {
                 quantity: cartItem.quantity,
             }
         ));
+    
+    const unavailableItems = user.cart.filter(c => !c.isAvailable).map(cartItem => ({
+        _id: cartItem.item._id,
+        title: cartItem.item.title,
+    }));
 
     const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
