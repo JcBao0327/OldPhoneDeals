@@ -32,4 +32,10 @@ router.post('/reset/:token', authController.handleResetPwd);
 // Email-verified page (GET) - render EJS template
 router.get('/verify', authController.handleEmailVerification);
 
+router.get('/signout', (req, res) => {
+    res.clearCookie('token');      // 清除浏览器中的 JWT token
+    req.session?.destroy?.();      // 如果你还用了 session，也一并销毁（可选）
+    res.redirect('/auth');         // 跳转到登录/注册主页
+});
+
 module.exports = router;

@@ -65,3 +65,6 @@ const PORT = config.app.port || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+const profileRoute = require('./routes/profileRoute');
+app.use('/profile', profileRoute);
