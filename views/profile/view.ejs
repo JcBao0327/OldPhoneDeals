@@ -69,19 +69,22 @@
 </div>
 
 <div id="listings" class="tab-content">
-    <h3>Add New Phone Listing</h3>
-    <form id="addListingForm">
-        <label>Title: <input type="text" name="title" required /></label><br />
-        <label>Brand: <input type="text" name="brand" required /></label><br />
-        <label>Price: <input type="number" name="price" step="0.01" required /></label><br />
-        <label>Stock: <input type="number" name="stock" required /></label><br />
-        <label>Image URL: <input type="text" name="image" /></label><br />
-        <button type="submit">Add Listing</button>
-    </form>
-    <h3>My Listings</h3>
-    <div id="myListings"></div>
-
-    <p id="addListingMessage" style="color: green;"></p>
+    <h3>Manage Your Listings</h3>
+    <button id="showAddFormBtn">+ Add New Listing</button>
+    
+    <div id="addListingFormContainer" style="display:none; margin-top:1rem;">
+      <form id="addListingForm">
+        <input type="text" name="title" placeholder="Title" required /><br />
+        <input type="text" name="brand" placeholder="Brand" required /><br />
+        <input type="number" name="price" placeholder="Price" required /><br />
+        <input type="number" name="stock" placeholder="Stock" required /><br />
+        <input type="text" name="image" placeholder="Image URL" /><br />
+        <button type="submit">Save Listing</button>
+      </form>
+      <p id="addListingMessage" style="color: green;"></p>
+    </div>
+    
+    <div id="myListings" style="margin-top:2rem;"></div>
 </div>
 
 <div id="comments" class="tab-content">
@@ -132,71 +135,71 @@
             messageEl.textContent = '❌ ' + errorText;
         }
     });
-    // 添加 listing 表单提交逻辑
-    document.getElementById('addListingForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
 
-        const form = e.target;
-        const formData = new FormData(form);
-        const body = Object.fromEntries(formData.entries());
+  document.getElementById('showAddFormBtn').addEventListener('click', () => {
+    const formContainer = document.getElementById('addListingFormContainer');
+    formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+  });
 
-        const res = await fetch('/profile/listings/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        });
+  document.getElementById('addListingForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const body = Object.fromEntries(formData.entries());
 
-        const msg = document.getElementById('addListingMessage');
-        if (res.ok) {
-            msg.style.color = 'green';
-            msg.textContent = '✅ Listing added!';
-            form.reset();
-        } else {
-            const text = await res.text();
-            msg.style.color = 'red';
-            msg.textContent = '❌ ' + text;
-        }
+    const res = await fetch('/profile/listings/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
-    // 加载我的 listing
-    async function loadMyListings() {
-        const res = await fetch('/profile/listings');
-        const listings = await res.json();
-        const container = document.getElementById('myListings');
-        container.innerHTML = '';
 
-        listings.forEach(listing => {
-            const item = document.createElement('div');
-            item.innerHTML = `
-      <strong>${listing.title}</strong> - $${listing.price} - Stock: ${listing.stock}
-      <br>Status: ${listing.disabled ? '❌ Disabled' : '✅ Enabled'}
-      <br>
-      <button onclick="toggleListing('${listing._id}')">
-        ${listing.disabled ? 'Enable' : 'Disable'}
-      </button>
-      <button onclick="deleteListing('${listing._id}')">Delete</button>
-      <hr>
-    `;
-            container.appendChild(item);
-        });
+    const msg = document.getElementById('addListingMessage');
+    if (res.ok) {
+      msg.textContent = '✅ Listing added successfully';
+      e.target.reset();
+      loadMyListings();
+    } else {
+      msg.textContent = '❌ Failed to add listing';
+    }
+  });
+
+  async function loadMyListings() {
+    const res = await fetch('/profile/listings');
+    const listings = await res.json();
+    const container = document.getElementById('myListings');
+    container.innerHTML = '';
+
+    if (listings.length === 0) {
+      container.innerHTML = '<p>You have no listings yet.</p>';
+      return;
     }
 
-    // 启用/禁用 listing
-    async function toggleListing(id) {
-        const res = await fetch(`/profile/listings/${id}/toggle`, { method: 'POST' });
-        if (res.ok) loadMyListings();
-    }
+    listings.forEach(listing => {
+      const item = document.createElement('div');
+      item.innerHTML = `
+        <strong>${listing.title}</strong> (${listing.brand}) - $${listing.price} - Stock: ${listing.stock}
+        <br>Status: ${listing.disabled ? '❌ Disabled' : '✅ Enabled'}
+        <br>
+        <button onclick="toggleListing('${listing._id}')">${listing.disabled ? 'Enable' : 'Disable'}</button>
+        <button onclick="deleteListing('${listing._id}')">Delete</button>
+        <hr>
+      `;
+      container.appendChild(item);
+    });
+  }
 
-    // 删除 listing
-    async function deleteListing(id) {
-        const confirmed = confirm('Are you sure you want to delete this listing?');
-        if (!confirmed) return;
+  async function toggleListing(id) {
+    const res = await fetch(`/profile/listings/${id}/toggle`, { method: 'POST' });
+    if (res.ok) loadMyListings();
+  }
 
-        const res = await fetch(`/profile/listings/${id}/delete`, { method: 'POST' });
-        if (res.ok) loadMyListings();
-    }
+  async function deleteListing(id) {
+    if (!confirm('Are you sure you want to delete this listing?')) return;
+    const res = await fetch(`/profile/listings/${id}/delete`, { method: 'POST' });
+    if (res.ok) loadMyListings();
+  }
 
-    // 初始化加载 listing
-    loadMyListings();
+  loadMyListings();
+
 
     async function loadSellerComments() {
         const res = await fetch('/profile/comments-on-my-listings');

@@ -60,6 +60,9 @@ phoneSchema.statics.searchPhones = async function (keyword) {
   });
 };
 
+/**
+ * These Listing refers to Phone. i.e. a listing is a phone
+ */
 phoneSchema.statics.createListing = async function (data) {
   return await this.create(data);
 };

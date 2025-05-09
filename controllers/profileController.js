@@ -77,64 +77,41 @@ exports.changePassword = async (req, res) => {
 
 const PhoneListing = require('../models/phoneListing');
 
-exports.addPhoneListing = async (req, res) => {
-    try {
-        const { title, brand, price, stock, image } = req.body;
-
-        const listing = new PhoneListing({
-            title,
-            brand,
-            price,
-            stock,
-            image,
-            seller: req.user._id  // 绑定当前用户
-        });
-
-        await listing.save();
-        res.status(200).send('Phone listing added successfully');
-    } catch (err) {
-        console.error('Failed to add listing:', err);
-        res.status(500).send('Failed to add listing');
-    }
-};
-
-// 获取当前用户的所有 listings
+// 获取我的所有 Listings
 exports.getMyListings = async (req, res) => {
-    try {
-        const listings = await PhoneListing.find({ seller: req.user._id });
-        res.json(listings);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to fetch listings');
-    }
+  const listings = await PhoneListing.getListingsByUser(req.user._id);
+  res.json(listings);
 };
 
-// 启用/禁用某 listing
+// 添加新 Listing
+exports.addPhoneListing = async (req, res) => {
+  try {
+    const data = { ...req.body, seller: req.user._id };
+    const listing = await PhoneListing.createListing(data);
+    res.status(200).json(listing);
+  } catch (err) {
+    res.status(500).send('Failed to add listing');
+  }
+};
+
+// 启用/禁用 Listing
 exports.toggleListingStatus = async (req, res) => {
-    try {
-        const listing = await PhoneListing.findOne({ _id: req.params.id, seller: req.user._id });
-        if (!listing) return res.status(404).send('Listing not found');
+  const listing = await PhoneListing.findById(req.params.id);
+  if (!listing || String(listing.seller) !== String(req.user._id)) {
+    return res.status(404).send('Listing not found or unauthorized');
+  }
 
-        listing.disabled = !listing.disabled;
-        await listing.save();
-        res.send('Status updated');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to update listing');
-    }
+  const updated = await PhoneListing.updateListingByOwner(req.params.id, req.user._id, { disabled: !listing.disabled });
+  res.send('Status updated');
 };
 
-// 删除 listing
+// 删除 Listing
 exports.deleteListing = async (req, res) => {
-    try {
-        const result = await PhoneListing.deleteOne({ _id: req.params.id, seller: req.user._id });
-        if (result.deletedCount === 0) return res.status(404).send('Listing not found');
-        res.send('Listing deleted');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to delete listing');
-    }
+  const deleted = await PhoneListing.deleteListingByOwner(req.params.id, req.user._id);
+  if (!deleted) return res.status(404).send('Listing not found');
+  res.send('Listing deleted');
 };
+
 
 // 获取当前用户发布的所有 listing 下的所有评论
 exports.getCommentsOnMyListings = async (req, res) => {

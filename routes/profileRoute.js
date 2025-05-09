@@ -24,4 +24,13 @@ router.get('/comments-on-my-listings', authMiddleware, profileController.getComm
 
 router.post('/comments/:phoneId/:index/toggle', authMiddleware, profileController.toggleCommentHiddenStatus);
 
+// 需要提前引入 profileController 和 authMiddleware
+router.get('/listings', authMiddleware, profileController.getMyListings);
+
+router.post('/listings/add', authMiddleware, profileController.addPhoneListing);
+
+router.post('/listings/:id/toggle', authMiddleware, profileController.toggleListingStatus);
+
+router.post('/listings/:id/delete', authMiddleware, profileController.deleteListing);
+
 module.exports = router;
