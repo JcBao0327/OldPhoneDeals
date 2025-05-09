@@ -17,7 +17,7 @@ exports.getCartItem = async (req, res) => {
 
         await user.refreshCartAvailability(session);
         await user.populate('cart.item');
-        const cartItems = user.cart.filter(c => c.isAvailable).map(cartItem => (
+        const cartItems = user.cart.map(cartItem => (
             {
                 _id: cartItem.item._id,
                 image: cartItem.item.image,
@@ -25,6 +25,8 @@ exports.getCartItem = async (req, res) => {
                 brand: cartItem.item.brand,
                 price: cartItem.item.price,
                 quantity: cartItem.quantity,
+                stock: cartItem.item.stock,
+                isAvailable: cartItem.isAvailable,
             }
         ));
     
@@ -33,7 +35,8 @@ exports.getCartItem = async (req, res) => {
         title: cartItem.item.title,
     }));
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalPrice = cartItems.filter(item => item.isAvailable).reduce((sum, item) => sum + item.price * item.quantity, 0);
+
 
     await session.commitTransaction();
         session.endSession();
@@ -130,19 +133,25 @@ exports.createTransaction = async (req, res) => {
     const session = await Transaction.startSession();
     session.startTransaction();
 
-    const result = await Transaction.createTransaction(req.user._id, session);
+    const { selectedItemIds } = req.body;
+
+    let result;
+    if (Array.isArray(selectedItemIds) && selectedItemIds.length > 0) {
+      // Partial checkout
+        result = await Transaction.createTransactionFromSelected(req.user._id, selectedItemIds, session);
+    } else {
+      // Full cart checkout
+        result = await Transaction.createTransaction(req.user._id, session);
+    }
+
     if (!result.success) {
         await session.abortTransaction();
-        session.endSession();
-        return res.status(400).send(result.reason);
+        return res.status(400).json({ message: result.reason });
     }
 
     await session.commitTransaction();
-
-    session.endSession();
-    return res.status(200).send({
+    return res.status(200).json({
         message: 'Transaction successful',
-        transaction: result.transaction,
+        transaction: result.transaction
     });
 };
-

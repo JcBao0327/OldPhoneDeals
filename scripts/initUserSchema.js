@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 const User = require('../models/user'); // 根据你的项目结构确认路径
+// const config = require('../config/config');
 
-mongoose.connect('mongodb://localhost:27017/oldphonedeals', {
+mongoose.connect('mongodb://127.0.0.1:27017/oldphonedeals?replicaSet=rs0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })

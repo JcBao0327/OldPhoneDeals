@@ -15,7 +15,7 @@ const rawPhones = JSON.parse(fs.readFileSync(phonesPath));
 
 // === Brand → Image Map ===
 const BRANDS = ["Samsung", "Apple", "HTC", "Huawei", "Nokia", "LG", "Motorola", "Sony", "BlackBerry"];
-const brandToImage = Object.fromEntries(BRANDS.map(b => [b, `images/${b}.jpeg`]));
+const brandToImage = Object.fromEntries(BRANDS.map(b => [b, `/images/${b}.jpeg`]));
 
 // === Hash Passwords from Config ===
 const defaultPassword = config.app.defaultPassword;

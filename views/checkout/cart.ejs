@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <button onclick="handleBacktoMain()">←</button>
+        <button onclick="history.back()">←</button>
         <h2>Cart</h2>
     </header>
 
@@ -16,19 +16,20 @@
     <p>You has <%= cartItems.length %> items in your cart.</p>
     <% if (unavailableItems.length > 0) { %>
         <p class="warning" style="color: red;">
-            The following items are no longer available: <%= unavailableItems.join(', ') %>
+          The following items are no longer available:
+          <%= unavailableItems.map(item => item.title).join(', ') %>
         </p>
-    <% } %>
+      <% } %>
     <main>
         <table>
             <thead>
                 <tr>
+                    <th>Select</th>
                     <th>Image</th>
                     <th>Title</th>
                     <th>Brand</th>
                     <th>Price</th>
                     <th>Quantity</th>
-                    <th>Modify</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -39,7 +40,15 @@
                     </tr>
                 <% } else { %>
                     <% cartItems.forEach(function(item) { %>
-                        <tr class="cart-item" data-price="<%= item.price %>">
+                        <tr class="cart-item <%= item.isAvailable === false ? 'unavailable' : '' %>" data-price="<%= item.price %>">
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    name="itemCheckbox"
+                                    value="<%= item._id %>"
+                                    <%= item.isAvailable === false ? 'disabled' : 'checked' %>
+                                >
+                            </td>
                             <td><img src="<%= item.image %>" alt="<%= item.title %>" width="60"></td>
                             <td><%= item.title %></td>
                             <td><%= item.brand %></td>
@@ -52,20 +61,13 @@
                                     name="quantity"
                                     value="<%= item.quantity %>"
                                     min="0"
+                                    data-stock="<%= item.stock %>"
+                                    onchange="updateQuantity('<%= item._id %>')"
                                     required
                                 >
                             </td>
                             <td>
-                                <form id="update-form-<%= item._id %>" action="/cart/update/<%= item._id %>" method="POST">
-                                    <input type="hidden" name="quantity" id="hidden-qty-<%= item._id %>">
-                                    <button type="button" onclick="updateQuantity('<%= item._id %>')">Update</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form action="/checkout/remove/<%= item._id %>" method="POST">
-                                    <input type="hidden" name="buyer" value="<%= user._id %>">
-                                    <button type="submit">Remove</button>
-                                </form>
+                                <button type="button" onclick="removeItem('<%= item._id %>')">Remove</button>
                             </td>
                         </tr>
                     <% }); %>
@@ -79,10 +81,7 @@
 
         <section>
             <% if (cartItems.length > 0) { %>
-                <form action="/checkout/transaction" method="POST">
-                    <input type="hidden" name="buyer" value="<%= user._id %>">
-                    <button type="submit" id="checkout-btn" onclick="confirmTransaction()">Check Out</button>
-                </form>
+                <button type="submit" id="checkout-btn" onclick="confirmTransaction()">Check Out</button>
             <% } %>
         </section>
     </main>
