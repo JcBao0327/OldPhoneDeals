@@ -77,13 +77,13 @@ exports.changePassword = async (req, res) => {
 
 const PhoneListing = require('../models/phoneListing');
 
-// 获取我的所有 Listings
+// 获取我发布的所有 Listings
 exports.getMyListings = async (req, res) => {
   const listings = await PhoneListing.getListingsByUser(req.user._id);
   res.json(listings);
 };
 
-// 添加新 Listing
+// 添加新的 Listing
 exports.addPhoneListing = async (req, res) => {
   try {
     const data = { ...req.body, seller: req.user._id };
@@ -94,7 +94,7 @@ exports.addPhoneListing = async (req, res) => {
   }
 };
 
-// 启用/禁用 Listing
+// 启用或禁用 Listing
 exports.toggleListingStatus = async (req, res) => {
   const listing = await PhoneListing.findById(req.params.id);
   if (!listing || String(listing.seller) !== String(req.user._id)) {
@@ -112,52 +112,34 @@ exports.deleteListing = async (req, res) => {
   res.send('Listing deleted');
 };
 
-
-// 获取当前用户发布的所有 listing 下的所有评论
+// 查看我所有 Listing 的评论
 exports.getCommentsOnMyListings = async (req, res) => {
-    try {
-        const listings = await PhoneListing.find({ seller: req.user._id }).lean();
+  const listings = await PhoneListing.getListingsWithReviewsBySeller(req.user._id);
 
-        const commentData = listings.map(listing => {
-            return {
-                phoneId: listing._id,
-                phoneTitle: listing.title,
-                reviews: listing.reviews.map((review, index) => ({
-                    index,
-                    reviewer: review.reviewer,
-                    rating: review.rating,
-                    comment: review.comment,
-                    hidden: review.hidden
-                }))
-            };
-        });
+  const commentData = listings.map(listing => ({
+    phoneId: listing._id,
+    phoneTitle: listing.title,
+    reviews: listing.reviews.map((review, index) => ({
+      index,
+      reviewer: review.reviewer,
+      rating: review.rating,
+      comment: review.comment,
+      hidden: review.hidden
+    }))
+  }));
 
-        res.json(commentData);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to fetch comments');
-    }
+  res.json(commentData);
 };
 
-// 切换评论隐藏状态
+// 切换评论可见性
 exports.toggleCommentHiddenStatus = async (req, res) => {
-    const { phoneId, index } = req.params;
+  const { phoneId, index } = req.params;
 
-    try {
-        const listing = await PhoneListing.findOne({ _id: phoneId, seller: req.user._id });
-        if (!listing) return res.status(404).send('Listing not found or unauthorized');
+  const updatedListing = await PhoneListing.toggleReviewHiddenStatus(phoneId, parseInt(index));
 
-        const i = parseInt(index);
-        if (isNaN(i) || i < 0 || i >= listing.reviews.length) {
-            return res.status(400).send('Invalid review index');
-        }
+  if (!updatedListing) {
+    return res.status(404).send('Comment not found');
+  }
 
-        listing.reviews[i].hidden = !listing.reviews[i].hidden;
-        await listing.save();
-
-        res.send('Comment visibility toggled');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to toggle comment visibility');
-    }
+  res.send('Comment visibility toggled');
 };

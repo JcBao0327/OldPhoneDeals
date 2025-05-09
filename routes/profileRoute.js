@@ -12,18 +12,6 @@ router.post('/edit', authMiddleware, profileController.handleEdit);
 
 router.post('/change-password', authMiddleware, profileController.changePassword);
 
-router.post('/listings/add', authMiddleware, profileController.addPhoneListing);
-
-router.get('/listings', authMiddleware, profileController.getMyListings);
-
-router.post('/listings/:id/toggle', authMiddleware, profileController.toggleListingStatus);
-
-router.post('/listings/:id/delete', authMiddleware, profileController.deleteListing);
-
-router.get('/comments-on-my-listings', authMiddleware, profileController.getCommentsOnMyListings);
-
-router.post('/comments/:phoneId/:index/toggle', authMiddleware, profileController.toggleCommentHiddenStatus);
-
 // 需要提前引入 profileController 和 authMiddleware
 router.get('/listings', authMiddleware, profileController.getMyListings);
 
@@ -32,5 +20,11 @@ router.post('/listings/add', authMiddleware, profileController.addPhoneListing);
 router.post('/listings/:id/toggle', authMiddleware, profileController.toggleListingStatus);
 
 router.post('/listings/:id/delete', authMiddleware, profileController.deleteListing);
+
+// 获取评论列表
+router.get('/comments-on-my-listings', authMiddleware, profileController.getCommentsOnMyListings);
+
+// 切换隐藏/显示
+router.post('/comments/:phoneId/:index/toggle', authMiddleware, profileController.toggleCommentHiddenStatus);
 
 module.exports = router;

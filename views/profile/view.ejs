@@ -89,7 +89,7 @@
 
 <div id="comments" class="tab-content">
     <h3>Comments on My Listings</h3>
-    <div id="commentsContainer">Loading...</div>
+    <div id="commentsContainer">Loading comments...</div>
 </div>
 
 <br />
@@ -200,32 +200,32 @@
 
   loadMyListings();
 
+// 加载我发布的所有手机下的评论
+async function loadSellerComments() {
+  const res = await fetch('/profile/comments-on-my-listings');
+  const data = await res.json();
 
-    async function loadSellerComments() {
-        const res = await fetch('/profile/comments-on-my-listings');
-        const data = await res.json();
+  const container = document.getElementById('commentsContainer');
+  container.innerHTML = '';
 
-        const container = document.getElementById('commentsContainer');
-        container.innerHTML = '';
+  if (data.length === 0) {
+    container.innerHTML = '<p>You have not listed any phones yet.</p>';
+    return;
+  }
 
-        if (data.length === 0) {
-            container.innerHTML = '<p>You have not listed any phones yet.</p>';
-            return;
-        }
+  data.forEach(listing => {
+    const phoneTitle = listing.phoneTitle;
+    const phoneId = listing.phoneId;
 
-        data.forEach(listing => {
-            const phoneTitle = listing.phoneTitle;
-            const phoneId = listing.phoneId;
+    const section = document.createElement('div');
+    section.innerHTML = `<h4>${phoneTitle}</h4>`;
 
-            const section = document.createElement('div');
-            section.innerHTML = `<h4>${phoneTitle}</h4>`;
-
-            if (listing.reviews.length === 0) {
-                section.innerHTML += '<p>No comments yet.</p>';
-            } else {
-                listing.reviews.forEach((r, idx) => {
-                    const div = document.createElement('div');
-                    div.innerHTML = `
+    if (listing.reviews.length === 0) {
+      section.innerHTML += '<p>No comments yet.</p>';
+    } else {
+      listing.reviews.forEach((r, idx) => {
+        const div = document.createElement('div');
+        div.innerHTML = `
           <p>
             ⭐ ${r.rating} - ${r.comment}
             ${r.hidden ? '<em>(Hidden)</em>' : ''}
@@ -234,26 +234,27 @@
             </button>
           </p>
         `;
-                    section.appendChild(div);
-                });
-            }
-
-            container.appendChild(section);
-            container.appendChild(document.createElement('hr'));
-        });
+        section.appendChild(div);
+      });
     }
 
-    async function toggleReview(phoneId, index) {
-        const res = await fetch(`/profile/comments/${phoneId}/${index}/toggle`, {
-            method: 'POST'
-        });
-        if (res.ok) {
-            loadSellerComments();
-        }
-    }
+    container.appendChild(section);
+    container.appendChild(document.createElement('hr'));
+  });
+}
 
-    // 初始化加载
+// 切换评论隐藏状态
+async function toggleReview(phoneId, index) {
+  const res = await fetch(`/profile/comments/${phoneId}/${index}/toggle`, {
+    method: 'POST'
+  });
+  if (res.ok) {
     loadSellerComments();
+  }
+}
+
+// 页面加载时初始化加载评论
+loadSellerComments();
 </script>
 </body>
 </html>
