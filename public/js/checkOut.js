@@ -1,5 +1,5 @@
     // Update quantity
-    function updateQuantity(itemId) {
+    async function updateQuantity(itemId) {
         const input = document.querySelector(`#quantity-${itemId}`);
         let quantity = parseInt(input.value);
         const maxStock = parseInt(input.dataset.stock);
@@ -13,6 +13,7 @@
         if (quantity > maxStock) {
             alert(`Only ${maxStock} items in stock.`);
             input.value = maxStock;
+            recalculateTotal();
             return;
         }
 
@@ -22,6 +23,20 @@
             } else {
                 input.value = 1;
             }
+            return;
+        }
+
+        const response = await fetch(`/checkout/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ itemId, quantity })
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            alert(`Error: ${result.message}`);
             return;
         }
 

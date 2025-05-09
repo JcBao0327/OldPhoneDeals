@@ -30,10 +30,14 @@ exports.getCartItem = async (req, res) => {
             }
         ));
     
-    const unavailableItems = user.cart.filter(c => !c.isAvailable).map(cartItem => ({
+    const unavailableItems = user.cart
+    .filter(c => !c.isAvailable || (c.item.stock < c.quantity))
+    .map(cartItem => ({
         _id: cartItem.item._id,
         title: cartItem.item.title,
+        reason: !cartItem.isAvailable ? 'Unavailable' : `Only ${cartItem.item.stock} left`,
     }));
+
 
     const totalPrice = cartItems.filter(item => item.isAvailable).reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -58,7 +62,7 @@ exports.updateItemQuantity = async (req, res) => {
     const userId = req.user._id;
 
     // Validate input
-    if (!itemId || quantity === null || quantity < 0 || IsInteger(quantity) === false || isNaN(quantity)) {
+    if (!itemId || quantity < 0 || Number.isInteger(quantity) === false || isNaN(quantity)) {
         return res.status(400).json({ error: 'Invalid item ID or quantity' });
     }
 

@@ -15,11 +15,16 @@
     <p>Hi! <%= user.name %></p>
     <p>You has <%= cartItems.length %> items in your cart.</p>
     <% if (unavailableItems.length > 0) { %>
-        <p class="warning" style="color: red;">
-          The following items are no longer available:
-          <%= unavailableItems.map(item => item.title).join(', ') %>
-        </p>
-      <% } %>
+    <p class="warning">
+        The following items are no longer valid:
+        <ul>
+        <% unavailableItems.forEach(item => { %>
+            <li style="text-align: center; list-style: none;"><%= item.title %> — <%= item.reason %></li>
+        <% }) %>
+        </ul>
+    </p>
+    <% } %>
+
     <main>
         <table>
             <thead>
