@@ -23,7 +23,7 @@ const verifyToken = async (req, res, next) => {
       return res.status(403).redirect('/auth');
     }
 
-    req.user = user; 
+    req.user = user;
     next();
   } catch (err) {
     console.error('JWT verification failed:', err);

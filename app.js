@@ -10,7 +10,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const YAML = require('yamljs');
 const authRoutes = require('./routes/authRoute');
-
+const checkOutRoute = require('./routes/checkOutRoute');
 
 // Custom Utils
 const connectDB = require('./models/db');
@@ -61,6 +61,8 @@ const jwtSecret = config.jwtSecret;
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/checkout', checkOutRoute);
+
 
 // Start Server
 const PORT = config.app.port || 3000;
