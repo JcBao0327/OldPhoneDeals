@@ -3,8 +3,13 @@ app:
   env: development
   sessionSecret: mySuperSecret
   mongoUri: mongodb://localhost:27017/oldphonedeals
-  defaultPassword: SecurePass1!
+  defaultPassword: "SecurePass1!"
+  jwtSecret: LouisTheMagnificentSecretKey
 
 admin:
   username: admin
   password: admin123
+
+email:
+  user: "louisliu330@gmail.com"
+  pass: "ingwieqsnbnlismk"  

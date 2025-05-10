@@ -9,7 +9,10 @@
   <div id="resetVerifiedContainer">
     <h1>Reset password</h1>
 
-    <form id="resetVerifiedForm" class="auth-form" action="" method="POST">
+    <form id="resetVerifiedForm" class="auth-form">
+
+      <input type="hidden" id="resetToken" name="token" value="<%= token %>">
+
       <label for="passwordInput">New Password</label>
       <input id="passwordInput" name="password" type="password" placeholder="Password" required />
 

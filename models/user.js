@@ -41,9 +41,8 @@ const userSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   lastLoginDate: { type: Date, default: null },
   isDisabled: { type: Boolean, default: false },
-  verificationToken: String,
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
+  verificationToken: { type: String, index: true, default: null},
+  resetPasswordToken: { type: String, index: true, default: null},
   cart: [cartItemSchema],
   wishlist: [wishlistItemSchema]
 }, { timestamps: true });
@@ -339,4 +338,13 @@ userSchema.statics.deleteUserDirect = async function ({ userId}) {
   return await this.findByIdAndDelete(userId);
 };
 
+// 04 search an account by verificationToken
+userSchema.statics.findByVerificationToken = function (token) {
+  return this.findOne({ verificationToken: token });
+};
+
+// 05 search an account by resetPasswordToken
+userSchema.statics.findByresetPasswordToken = function (token) {
+  return this.findOne({ resetPasswordToken: token });
+};
 module.exports = mongoose.model('User', userSchema);
