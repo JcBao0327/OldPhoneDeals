@@ -1,0 +1,103 @@
+<!-- views/checkout/cart.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart - OldPhoneDeals</title>
+    <link rel="stylesheet" href="/css/checkOut.css">
+</head>
+<body>
+    <header>
+        <button onclick="history.back()">←</button>
+        <h2>Cart</h2>
+    </header>
+
+    <p>Hi! <%= user.name %></p>
+    <p>You has <%= cartItems.length %> items in your cart.</p>
+    <% if (unavailableItems.length > 0) { %>
+    <div class="warning">
+        <p>The following items are no longer valid:</p>
+        <ul>
+        <% unavailableItems.forEach(item => { %>
+            <li style="text-align: center; list-style: none;">
+            <%= item.title %> — <%= item.reason %>
+            </li>
+        <% }) %>
+        </ul>
+    </div>
+    <% } %>
+
+
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Brand</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (cartItems.length === 0) { %>
+                    <tr>
+                        <td colspan="8">Your cart is empty.</td>
+                    </tr>
+                <% } else { %>
+                    <% cartItems.forEach(function(item) { %>
+                        <tr class="cart-item <%= item.isAvailable === false ? 'unavailable' : '' %>" data-price="<%= item.price %>">
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    name="itemCheckbox"
+                                    value="<%= item._id %>"
+                                    <%= item.isAvailable === false ? 'disabled' : 'checked' %>
+                                >
+                            </td>
+                            <td><img src="<%= item.image %>" alt="<%= item.title %>" width="60"></td>
+                            <td><%= item.title %></td>
+                            <td><%= item.brand %></td>
+                            <td>$<%= item.price.toFixed(2) %></td>
+                            <td>
+                                <input
+                                    id="quantity-<%= item._id %>"
+                                    class="quantity-input"
+                                    type="number"
+                                    name="quantity"
+                                    value="<%= item.quantity %>"
+                                    min="0"
+                                    data-stock="<%= item.stock %>"
+                                    required
+                                >
+                            </td>
+                            <td>
+                                <button type="button" onclick="handleUpdateQuantity('<%= item._id %>')">Update</button>
+                            </td>
+                            <td>
+                                <button type="button" onclick="removeItem('<%= item._id %>')">Remove</button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+        </table>
+
+        <section>
+            <h2>Total: <span id="total-amount">$<%= totalPrice.toFixed(2) %></span></h2>
+        </section>
+
+        <section>
+            <% if (cartItems.length > 0) { %>
+                <button type="submit" id="checkout-btn" onclick="confirmTransaction()">Check Out</button>
+            <% } %>
+        </section>
+    </main>
+    <script src="/js/checkOut.js"></script>
+</body>
+</html>
+
+

@@ -10,7 +10,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const YAML = require('yamljs');
 const authRoutes = require('./routes/authRoute');
-
+const checkOutRoute = require('./routes/checkOutRoute');
 
 // Custom Utils
 const connectDB = require('./models/db');
@@ -34,6 +34,8 @@ if (config.app.env === 'development') {
 }
 
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(session({
     secret: config.app.sessionSecret,
@@ -59,6 +61,8 @@ const jwtSecret = config.jwtSecret;
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/checkout', checkOutRoute);
+
 
 // Start Server
 const PORT = config.app.port || 3000;

@@ -44,6 +44,10 @@ transactionSchema.statics.createTransaction = async function(buyerId, session) {
     return { success: false, reason: 'User not found' };
   }
 
+  if (!user.cart || user.cart.length === 0) {
+    return { success: false, reason: 'Cart is empty' };
+  }
+
   const updatedItems = [];
   let totalAmount = 0;
 
@@ -86,6 +90,74 @@ transactionSchema.statics.createTransaction = async function(buyerId, session) {
     items: updatedItems,
     totalAmount
   }], { session });
+
+  return { success: true, transaction: transaction[0] };
+};
+
+// Static method: Create a new transaction from selected items in user's cart
+transactionSchema.statics.createTransactionFromSelected = async function(buyerId, selectedItemIds, session) {
+
+  const user = await User.findById(buyerId).session(session).populate('cart.item');
+
+  if (!user) {
+    return { success: false, reason: 'User not found' };
+  }
+
+  if (!user.cart || user.cart.length === 0) {
+    return { success: false, reason: 'Cart is empty' };
+  }
+
+  const updatedItems = [];
+  let totalAmount = 0;
+
+  for (const cartItem of user.cart) {
+    if (!selectedItemIds.includes(cartItem.item._id.toString())) continue;
+
+    const phone = await PhoneListing.findById(cartItem.item._id).session(session);
+    if (!phone) {
+      return { success: false, reason: `Phone listing ${cartItem.item._id} not found` };
+    }
+
+    if (phone.disabled || phone.stock === 0) {
+      return { success: false, reason: `Phone ${phone.title} is unavailable or out of stock` };
+    }
+
+    if (phone.stock < cartItem.quantity) {
+      return { success: false, reason: `Not enough stock for ${phone.title}` };
+    }
+
+    updatedItems.push({
+      item: phone._id,
+      quantity: cartItem.quantity,
+      price: phone.price
+    });
+
+    totalAmount += phone.price * cartItem.quantity;
+
+    phone.stock -= cartItem.quantity;
+    await phone.save({ session });
+  }
+
+  if (updatedItems.length === 0) {
+    return { success: false, reason: 'No valid items selected for checkout' };
+  }
+
+  // Remove purchased items from cart
+  user.cart = user.cart.filter(cartItem =>
+    !selectedItemIds.includes(cartItem.item._id.toString())
+  );
+
+  await user.save({ session });
+
+  // Create transaction
+  const transaction = await this.create([{
+    buyer: buyerId,
+    items: updatedItems,
+    totalAmount
+  }], { session });
+
+  // Refresh availability for remaining items
+  await user.refreshCartAvailability(session);
 
   return { success: true, transaction: transaction[0] };
 };

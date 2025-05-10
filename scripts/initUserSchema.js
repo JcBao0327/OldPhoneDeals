@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const User = require('../models/user'); // 根据你的项目结构确认路径
+const User = require('../models/user');
+const YAML = require('yamljs');
 
-mongoose.connect('mongodb://localhost:27017/oldphonedeals', {
+// Load YAML config
+const config = YAML.load(path.join(__dirname, '../config/config.yaml'));
+
+mongoose.connect(config.app.mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
