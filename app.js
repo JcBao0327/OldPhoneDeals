@@ -34,6 +34,8 @@ if (config.app.env === 'development') {
 }
 
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(session({
     secret: config.app.sessionSecret,
