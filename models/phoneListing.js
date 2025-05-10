@@ -22,36 +22,32 @@ const phoneSchema = new mongoose.Schema({
 /**
  * Get top 5 best sellers (returns full PhoneListing instances)
  */
-phoneSchema.statics.getBestSellers = async function () {
+ phoneSchema.statics.getBestSellers = async function () {
   return await this.aggregate([
-    // Match phones where disabled is false or missing AND at least 2 reviews
     {
       $match: {
         $or: [
           { disabled: false },
           { disabled: { $exists: false } }
         ],
-        "reviews.1": { $exists: true }  // at least 2 reviews (index 1 exists)
+        "reviews.1": { $exists: true },  // at least 2 reviews
+        stock: { $gt: 0 }                // stock greater than 0
       }
     },
-    // Flatten reviews array to process each review separately
     { $unwind: "$reviews" },
-    // Group by phone ID to calculate average rating per phone
     {
       $group: {
         _id: "$_id",
-        avgRating: { $avg: "$reviews.rating" },  // calculate average rating
-        phoneDocument: { $first: "$$ROOT" }      // keep original phone doc
+        avgRating: { $avg: "$reviews.rating" },
+        phoneDocument: { $first: "$$ROOT" }
       }
     },
-    // Sort phones by highest average rating
     { $sort: { avgRating: -1 } },
-    // Limit to top 5 best-rated phones
     { $limit: 5 },
-    // Return the original phone documents (not the aggregation result shape)
     { $replaceRoot: { newRoot: "$phoneDocument" } }
   ]);
 };
+
 
 
 /**
