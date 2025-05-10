@@ -35,13 +35,14 @@
                     <th>Brand</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Update</th>
                     <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
                 <% if (cartItems.length === 0) { %>
                     <tr>
-                        <td colspan="7">Your cart is empty.</td>
+                        <td colspan="8">Your cart is empty.</td>
                     </tr>
                 <% } else { %>
                     <% cartItems.forEach(function(item) { %>
@@ -67,9 +68,11 @@
                                     value="<%= item.quantity %>"
                                     min="0"
                                     data-stock="<%= item.stock %>"
-                                    onchange="updateQuantity('<%= item._id %>')"
                                     required
                                 >
+                            </td>
+                            <td>
+                                <button type="button" onclick="handleUpdateQuantity('<%= item._id %>')">Update</button>
                             </td>
                             <td>
                                 <button type="button" onclick="removeItem('<%= item._id %>')">Remove</button>

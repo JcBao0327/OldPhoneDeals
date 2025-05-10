@@ -1,47 +1,51 @@
-    // Update quantity
-    async function updateQuantity(itemId) {
-        const input = document.querySelector(`#quantity-${itemId}`);
-        let quantity = parseInt(input.value);
-        const maxStock = parseInt(input.dataset.stock);
-
-        if (isNaN(quantity) || quantity < 0 || !Number.isInteger(quantity)) {
-            alert("Please enter a valid non-negative non-decimal quantity.");
-            input.value = 1;
-            return;
-        }
-
-        if (quantity > maxStock) {
-            alert(`Only ${maxStock} items in stock.`);
-            input.value = maxStock;
-            recalculateTotal();
-            return;
-        }
-
-        if (quantity === 0) {
-            if (confirm("Quantity is 0. Do you want to remove this item from the cart?")) {
-                removeItem(itemId);
-            } else {
-                input.value = 1;
-            }
-            return;
-        }
-
-        const response = await fetch(`/checkout/update`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ itemId, quantity })
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-            alert(`Error: ${result.message}`);
-            return;
-        }
-
-        recalculateTotal();
+// Update quantity
+async function handleUpdateQuantity(itemId) {
+    const input = document.querySelector(`#quantity-${itemId}`);
+    let quantity = parseInt(input.value);
+    const maxStock = parseInt(input.dataset.stock);
+    
+    if (maxStock === 0) {
+        alert("This item is out of stock.");
+        return;
     }
+
+    if (isNaN(quantity) || quantity < 0 || !Number.isInteger(quantity)) {
+        alert("Please enter a valid non-negative non-decimal quantity.");
+        input.value = 1;
+        return;
+    }
+
+    if (quantity > maxStock) {
+        alert(`Only ${maxStock} items in stock.`);
+        input.value = maxStock;
+        return;
+    }
+
+    if (quantity === 0) {
+        if (confirm("Quantity is 0. Do you want to remove this item from the cart?")) {
+            await removeItem(itemId);
+        } else {
+            input.value = 1;
+        }
+        return;
+    }
+
+    const response = await fetch(`/checkout/update`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ itemId, quantity })
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+        alert(`Error: ${result.message}`);
+        return;
+    }
+
+    recalculateTotal();
+}
 
     // Recalculate total price based on the updated quantities
     function recalculateTotal() {
@@ -58,13 +62,6 @@
         const totalAmountElement = document.getElementById('total-amount');
         totalAmountElement.innerText = `$${total.toFixed(2)}`;
     }
-
-    // Live recalculate when changing quantity input
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.quantity-input').forEach(input => {
-            input.addEventListener('input', recalculateTotal);
-        });
-    });
 
     // Remove item from cart
     async function removeItem(itemId) {

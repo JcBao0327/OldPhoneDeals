@@ -22,7 +22,7 @@ const phoneSchema = new mongoose.Schema({
 /**
  * Get top 5 best sellers (returns full PhoneListing instances)
  */
- phoneSchema.statics.getBestSellers = async function () {
+phoneSchema.statics.getBestSellers = async function () {
   return await this.aggregate([
     // Match phones where disabled is false or missing AND at least 2 reviews
     {
@@ -57,7 +57,7 @@ const phoneSchema = new mongoose.Schema({
 /**
  * Get top 5 sold out soon (returns full PhoneListing instances)
  */
- phoneSchema.statics.getSoldOutSoon = async function () {
+phoneSchema.statics.getSoldOutSoon = async function () {
   return await this.find({
     $or: [
       { disabled: false },
@@ -72,18 +72,22 @@ const phoneSchema = new mongoose.Schema({
 /**
  * Search phones by keyword (returns full PhoneListing instances)
  */
- phoneSchema.statics.searchPhones = async function (keyword) {
+phoneSchema.statics.searchPhones = async function (keyword) {
   const regex = new RegExp(keyword, 'i');
   return await this.find({
-    $or: [
-      { disabled: false },
-      { disabled: { $exists: false } }
-    ],
-    $or: [
+    $and: [
+      {
+        $or: [
+          { disabled: false },
+          { disabled: { $exists: false } }
+        ]
+      },
+      { stock: { $gt: 0 } },
       { title: { $regex: regex } }
     ]
   });
 };
+
 
 
 module.exports = mongoose.model('PhoneListing', phoneSchema);
