@@ -63,10 +63,6 @@ const jwtSecret = config.jwtSecret;
 app.use('/auth', authRoutes);
 app.use('/checkout', checkOutRoute);
 
-// Test Route
-const cartTestRoute = require('./routes/cartTestRoute');
-app.use('/api', cartTestRoute);
-
 
 // Start Server
 const PORT = config.app.port || 3000;
