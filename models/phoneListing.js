@@ -22,41 +22,66 @@ const phoneSchema = new mongoose.Schema({
 /**
  * Get top 5 best sellers (returns full PhoneListing instances)
  */
-phoneSchema.statics.getBestSellers = async function () {
-  // Step 1: find non-disabled phones
-  const phones = await this.find({ disabled: false });
-
-  // Step 2: filter phones with >=2 reviews
-  const filtered = phones.filter(phone => phone.reviews.length >= 2);
-
-  // Step 3: sort by average rating descending
-  filtered.sort((a, b) => {
-    const avgA = a.reviews.reduce((sum, r) => sum + r.rating, 0) / a.reviews.length;
-    const avgB = b.reviews.reduce((sum, r) => sum + r.rating, 0) / b.reviews.length;
-    return avgB - avgA;
-  });
-
-  // Step 4: return top 5
-  return filtered.slice(0, 5);
+ phoneSchema.statics.getBestSellers = async function () {
+  return await this.aggregate([
+    // Match phones where disabled is false or missing AND at least 2 reviews
+    {
+      $match: {
+        $or: [
+          { disabled: false },
+          { disabled: { $exists: false } }
+        ],
+        "reviews.1": { $exists: true }  // at least 2 reviews (index 1 exists)
+      }
+    },
+    // Flatten reviews array to process each review separately
+    { $unwind: "$reviews" },
+    // Group by phone ID to calculate average rating per phone
+    {
+      $group: {
+        _id: "$_id",
+        avgRating: { $avg: "$reviews.rating" },  // calculate average rating
+        phoneDocument: { $first: "$$ROOT" }      // keep original phone doc
+      }
+    },
+    // Sort phones by highest average rating
+    { $sort: { avgRating: -1 } },
+    // Limit to top 5 best-rated phones
+    { $limit: 5 },
+    // Return the original phone documents (not the aggregation result shape)
+    { $replaceRoot: { newRoot: "$phoneDocument" } }
+  ]);
 };
+
 
 /**
  * Get top 5 sold out soon (returns full PhoneListing instances)
  */
-phoneSchema.statics.getSoldOutSoon = async function () {
+ phoneSchema.statics.getSoldOutSoon = async function () {
   return await this.find({
-    disabled: false,
+    $or: [
+      { disabled: false },
+      { disabled: { $exists: false } }
+    ],
     stock: { $gt: 0 }
-  }).sort({ stock: 1 }).limit(5);
+  })
+  .sort({ stock: 1 })
+  .limit(5);
 };
 
 /**
  * Search phones by keyword (returns full PhoneListing instances)
  */
-phoneSchema.statics.searchPhones = async function (keyword) {
+ phoneSchema.statics.searchPhones = async function (keyword) {
   const regex = new RegExp(keyword, 'i');
   return await this.find({
-    title: { $regex: regex }
+    $or: [
+      { disabled: false },
+      { disabled: { $exists: false } }
+    ],
+    $or: [
+      { title: { $regex: regex } }
+    ]
   });
 };
 

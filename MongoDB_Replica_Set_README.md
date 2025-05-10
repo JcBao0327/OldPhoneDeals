@@ -13,7 +13,7 @@ This guide provides setup instructions for initializing a local MongoDB **replic
 
 ---
 
-## ⚙️ Step-by-Step Setup (Windows & macOS)
+## ⚙️ Manual Setup (Windows & macOS)
 
 ### 1. Install MongoDB
 
@@ -43,7 +43,7 @@ mkdir -p ~/data/db
 
 ### 3. Start MongoDB with Replica Set
 
-> Open a new terminal and run the following command based on your OS:
+> Open a terminal and run the appropriate command below.
 
 **Windows:**
 ```powershell
@@ -71,7 +71,7 @@ Then inside the shell, run:
 rs.initiate()
 ```
 
-### 5. Check Status
+### 5. Check Replica Set Status
 
 ```javascript
 rs.status()
@@ -80,19 +80,38 @@ rs.status()
 You should see `"myState": 1` and `"set": "rs0"` in the output.
 
 ---
+
+## ⚡ macOS: One-Line Quick Start Command
+
+This command does everything: creates the DB path, starts `mongod` in background, waits 5 seconds, and runs `rs.initiate()` in the shell.
+
+```bash
+mkdir -p ~/data/db && mongod --replSet rs0 --dbpath ~/data/db & sleep 5 && echo 'rs.initiate()' | mongosh
+```
+
+## ⚡ Windows: One-Line Quick Start Command
+
+```powershell
+New-Item -ItemType Directory -Force -Path "C:\data\db"; Start-Process powershell -ArgumentList '-NoExit','-Command','"C:\Program Files\MongoDB\Server\8.0\bin\mongod.exe" --replSet rs0 --dbpath "C:\data\db"'; Start-Sleep -Seconds 5; mongosh -Command "rs.initiate()"
+```
+
+> ✅ Use this only once to initialize your dev environment.
+
+---
+
 ## 🧪 Troubleshooting
 
-- **Port in use:** `lsof -i :27017` (macOS) or use Task Manager (Windows).
+- **Port in use:** `lsof -i :27017` (macOS) or check Task Manager (Windows).
 - **Permission denied:** Run `chmod 755 ~/data/db` on macOS.
-- **Replica Set not working:** Ensure you’ve initiated using `rs.initiate()`.
-- **DB not found:** Make sure the db path is correct and accessible.
+- **Replica Set not working:** Ensure you’ve run `rs.initiate()` after `mongod` starts.
+- **DB not found:** Verify the `--dbpath` exists and is correct.
 
 ---
 
 ## ✅ Ready to Run
 
-- Confirm MongoDB is listening on `mongodb://localhost:27017/?replicaSet=rs0`
-- Start your backend: `npm start` or `node app.js`
+- MongoDB should be listening at: `mongodb://localhost:27017/oldphonedeals?replicaSet=rs0`
+- Start the backend server with: `npm start` or `node app.js`
 
 ---
 

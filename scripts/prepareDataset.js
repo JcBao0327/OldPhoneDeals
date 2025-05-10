@@ -26,15 +26,18 @@ const updatedUsers = rawUsers.map(user => ({
   password: hashedPassword
 }));
 
-// === Update Phone Images ===
+// === Update Phone Images & Apply disabled/hidden fixes ===
 const updatedPhones = rawPhones.map(phone => ({
   ...phone,
-  image: brandToImage[phone.brand] || 'images/default.jpeg'
+  image: brandToImage[phone.brand] || '/images/default.jpeg',
+  disabled: phone.disabled === "" ? true : (phone.disabled !== undefined ? phone.disabled : false),
+  reviews: (phone.reviews || []).map(review => ({
+    ...review,
+    hidden: review.hidden === "" ? true : (review.hidden !== undefined ? review.hidden : false)
+  }))
 }));
 
 // === Save to /data directory ===
 fs.writeFileSync(path.join(__dirname, '../data/processed_users.json'), JSON.stringify(updatedUsers, null, 2));
 fs.writeFileSync(path.join(__dirname, '../data/processed_phones.json'), JSON.stringify(updatedPhones, null, 2));
-
-console.log('Users and phone listings processed successfully.');
 
