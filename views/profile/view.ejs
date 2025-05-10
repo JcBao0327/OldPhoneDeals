@@ -101,16 +101,13 @@
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // 清除 active 状态
             tabs.forEach(t => t.classList.remove('active'));
             contents.forEach(c => c.classList.remove('active'));
 
-            // 激活当前 tab 和内容
             tab.classList.add('active');
             document.getElementById(tab.dataset.tab).classList.add('active');
         });
     });
-    // 修改密码提交逻辑
     document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -132,7 +129,7 @@
         } else {
             const errorText = await res.text();
             messageEl.style.color = 'red';
-            messageEl.textContent = '❌ ' + errorText;
+            messageEl.textContent = errorText;
         }
     });
 
@@ -154,11 +151,11 @@
 
     const msg = document.getElementById('addListingMessage');
     if (res.ok) {
-      msg.textContent = '✅ Listing added successfully';
+      msg.textContent = 'Listing added successfully';
       e.target.reset();
       loadMyListings();
     } else {
-      msg.textContent = '❌ Failed to add listing';
+      msg.textContent = 'Failed to add listing';
     }
   });
 
@@ -177,7 +174,7 @@
       const item = document.createElement('div');
       item.innerHTML = `
         <strong>${listing.title}</strong> (${listing.brand}) - $${listing.price} - Stock: ${listing.stock}
-        <br>Status: ${listing.disabled ? '❌ Disabled' : '✅ Enabled'}
+        <br>Status: ${listing.disabled ? 'Disabled' : 'Enabled'}
         <br>
         <button onclick="toggleListing('${listing._id}')">${listing.disabled ? 'Enable' : 'Disable'}</button>
         <button onclick="deleteListing('${listing._id}')">Delete</button>
@@ -200,7 +197,6 @@
 
   loadMyListings();
 
-// 加载我发布的所有手机下的评论
 async function loadSellerComments() {
   const res = await fetch('/profile/comments-on-my-listings');
   const data = await res.json();
@@ -227,7 +223,7 @@ async function loadSellerComments() {
         const div = document.createElement('div');
         div.innerHTML = `
           <p>
-            ⭐ ${r.rating} - ${r.comment}
+            ★ ${r.rating} - ${r.comment}
             ${r.hidden ? '<em>(Hidden)</em>' : ''}
             <button onclick="toggleReview('${phoneId}', ${idx})">
               ${r.hidden ? 'Show' : 'Hide'}
@@ -243,7 +239,6 @@ async function loadSellerComments() {
   });
 }
 
-// 切换评论隐藏状态
 async function toggleReview(phoneId, index) {
   const res = await fetch(`/profile/comments/${phoneId}/${index}/toggle`, {
     method: 'POST'
@@ -253,7 +248,6 @@ async function toggleReview(phoneId, index) {
   }
 }
 
-// 页面加载时初始化加载评论
 loadSellerComments();
 </script>
 </body>

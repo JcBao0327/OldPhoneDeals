@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const config = require('../config/config.yaml');
 
 exports.viewProfile = (req, res) => {
-    const user = req.user;  // 来自 JWT 校验后的 authMiddleware
+    const user = req.user;
     res.render('profile/view', { user });
 };
 
@@ -77,13 +77,11 @@ exports.changePassword = async (req, res) => {
 
 const PhoneListing = require('../models/phoneListing');
 
-// 获取我发布的所有 Listings
 exports.getMyListings = async (req, res) => {
   const listings = await PhoneListing.getListingsByUser(req.user._id);
   res.json(listings);
 };
 
-// 添加新的 Listing
 exports.addPhoneListing = async (req, res) => {
   try {
     const data = { ...req.body, seller: req.user._id };
@@ -94,7 +92,6 @@ exports.addPhoneListing = async (req, res) => {
   }
 };
 
-// 启用或禁用 Listing
 exports.toggleListingStatus = async (req, res) => {
   const listing = await PhoneListing.findById(req.params.id);
   if (!listing || String(listing.seller) !== String(req.user._id)) {
@@ -105,14 +102,12 @@ exports.toggleListingStatus = async (req, res) => {
   res.send('Status updated');
 };
 
-// 删除 Listing
 exports.deleteListing = async (req, res) => {
   const deleted = await PhoneListing.deleteListingByOwner(req.params.id, req.user._id);
   if (!deleted) return res.status(404).send('Listing not found');
   res.send('Listing deleted');
 };
 
-// 查看我所有 Listing 的评论
 exports.getCommentsOnMyListings = async (req, res) => {
   const listings = await PhoneListing.getListingsWithReviewsBySeller(req.user._id);
 
@@ -131,7 +126,6 @@ exports.getCommentsOnMyListings = async (req, res) => {
   res.json(commentData);
 };
 
-// 切换评论可见性
 exports.toggleCommentHiddenStatus = async (req, res) => {
   const { phoneId, index } = req.params;
 
