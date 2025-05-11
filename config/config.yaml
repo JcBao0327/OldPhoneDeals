@@ -1,15 +1,15 @@
 app:
   port: 3000
-  env: "development"
-  sessionSecret: "mySuperSecret"
-  mongoUri: "mongodb://localhost:27017/oldphonedeals"
+  env: development
+  sessionSecret: mySuperSecret
+  mongoUri: 'mongodb://localhost:27017/oldphonedeals'
   defaultPassword: "SecurePass1!"
-  jwtSecret: "LouisTheMagnificentSecretKey"
+  jwtSecret: LouisTheMagnificentSecretKey
 
 admin:
-  username: "admin"
-  password: "admin123"
+  username: admin
+  password: admin123
 
 email:
   user: "louisliu330@gmail.com"
-  pass: "ingwieqsnbnlismk"
+  pass: "ingwieqsnbnlismk"  

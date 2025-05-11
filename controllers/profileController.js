@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer');
-const config = require('../config/config.yaml');
+const YAML = require('yamljs');
+const path = require('path');
+
+// load config.yaml
+const config = YAML.load(path.join(__dirname, '../config/config.yaml'));
 
 exports.viewProfile = (req, res) => {
     const user = req.user;
