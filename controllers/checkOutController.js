@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
-// const PhoneListing = require('../models/phoneListing');
 const Transaction = require('../models/transaction');
+const path = require('path');
+const YAML = require('yamljs');
+const nodemailer = require('nodemailer');
+
+// Load YAML config
+const config = YAML.load(path.join(__dirname, '../config/config.yaml'));
 
 // Get cart item and Render the checkout page
 exports.getCartItem = async (req, res) => {
@@ -39,7 +44,15 @@ exports.getCartItem = async (req, res) => {
     }));
 
 
-    const totalPrice = cartItems.filter(item => item.isAvailable).reduce((sum, item) => sum + item.price * item.quantity, 0);
+    // Accept selected item IDs from query if passed (e.g., ?selected=ID1,ID2)
+    const selectedIds = req.query.selected ? req.query.selected.split(',') : [];
+
+    const totalPrice = user.cart
+    .filter(c =>
+        c.isAvailable &&
+        (selectedIds.length === 0 || selectedIds.includes(c.item._id.toString()))
+    )
+    .reduce((sum, c) => sum + c.item.price * c.quantity, 0);
 
 
     await session.commitTransaction();
@@ -154,8 +167,37 @@ exports.createTransaction = async (req, res) => {
     }
 
     await session.commitTransaction();
-    return res.status(200).json({
-        message: 'Transaction successful',
-        transaction: result.transaction
-    });
+
+    // Notify Admin with email for new transaction
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+                user: config.email.user, // e.g. 'youremail@gmail.com'
+                pass: config.email.pass  // Gmail App Password
+            }
+        });
+
+        await result.transaction.populate('items.item', 'title');
+    
+        await transporter.sendMail({
+            from: config.email.user,
+            to: config.email.user,
+            subject: `New Transaction Placed - OldPhoneDeals`,
+            html: `
+                    A new transaction has been completed by ${req.user.firstname} ${req.user.lastname} (${req.user.email}).</p>
+                    <p><strong>Total Amount:</strong> $${result.transaction.totalAmount.toFixed(2)}</p>
+                    <p><strong>Items Purchased:</strong></p>
+                    <ul>
+                        ${result.transaction.items.map(item => `
+                            <li>${item.quantity} × ${item.item.title} @ $${item.price}</li>
+                        `).join('')}
+                    </ul>
+                    <p><strong>Transaction Date:</strong> ${new Date(result.transaction.createdAt).toLocaleString()}</p>
+                `
+        });
+
+        return res.status(200).json({
+            message: 'Transaction successful',
+            transaction: result.transaction
+        });
 };
