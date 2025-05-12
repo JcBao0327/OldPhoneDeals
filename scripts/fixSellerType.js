@@ -23,7 +23,7 @@ const config = YAML.load(path.join(__dirname, '../config/config.yaml'));
 
         for (const listing of listings) {
             const oldSeller = listing.seller;
-            const newSeller = new mongoose.Types.ObjectId(oldSeller);  // ✅ 使用 new
+            const newSeller = new mongoose.Types.ObjectId(oldSeller);
 
             await collection.updateOne(
                 { _id: listing._id },

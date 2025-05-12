@@ -2,7 +2,7 @@ app:
   port: 3000
   env: development
   sessionSecret: mySuperSecret
-  mongoUri: 'mongodb://localhost:27017/oldphonedeals'
+  mongoUri: 'mongodb://localhost:27017/oldphonedeals?replicaSet=rs0'
   defaultPassword: "SecurePass1!"
   jwtSecret: LouisTheMagnificentSecretKey
 

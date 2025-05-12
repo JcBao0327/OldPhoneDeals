@@ -261,3 +261,8 @@ exports.handleEmailVerification = async (req, res) => {
     return res.status(500).send('Server error during verification.');
   }
 };
+
+exports.signout = (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/auth');
+};

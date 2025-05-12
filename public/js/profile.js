@@ -27,7 +27,7 @@
     const messageEl = document.getElementById('passwordMessage');
     if (res.ok) {
     messageEl.style.color = 'green';
-    messageEl.textContent = '✅ Password updated successfully.';
+    messageEl.textContent = 'Password updated successfully.';
     form.reset();
 } else {
     const errorText = await res.text();
