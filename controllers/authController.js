@@ -264,5 +264,6 @@ exports.handleEmailVerification = async (req, res) => {
 
 exports.signout = (req, res) => {
   res.clearCookie('token');
+  req.session?.destroy?.();
   res.redirect('/auth');
 };
