@@ -23,4 +23,6 @@ router.get('/comments-on-my-listings', authMiddleware, profileController.getComm
 
 router.post('/comments/:phoneId/:index/toggle', authMiddleware, profileController.toggleCommentHiddenStatus);
 
+router.get('/wishlist', authMiddleware, profileController.getMyWishlist);
+
 module.exports = router;

@@ -1,8 +1,7 @@
+const tabs = document.querySelectorAll('.tab-btn');
+const contents = document.querySelectorAll('.tab-content');
 
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
+tabs.forEach(tab => {
     tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         contents.forEach(c => c.classList.remove('active'));
@@ -11,7 +10,7 @@
         document.getElementById(tab.dataset.tab).classList.add('active');
     });
 });
-    document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const form = e.target;
@@ -19,63 +18,63 @@
     const newPassword = form.newPassword.value;
 
     const res = await fetch('/profile/change-password', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ currentPassword, newPassword })
-});
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({currentPassword, newPassword})
+    });
 
     const messageEl = document.getElementById('passwordMessage');
     if (res.ok) {
-    messageEl.style.color = 'green';
-    messageEl.textContent = 'Password updated successfully.';
-    form.reset();
-} else {
-    const errorText = await res.text();
-    messageEl.style.color = 'red';
-    messageEl.textContent = errorText;
-}
+        messageEl.style.color = 'green';
+        messageEl.textContent = 'Password updated successfully.';
+        form.reset();
+    } else {
+        const errorText = await res.text();
+        messageEl.style.color = 'red';
+        messageEl.textContent = errorText;
+    }
 });
 
-    document.getElementById('showAddFormBtn').addEventListener('click', () => {
+document.getElementById('showAddFormBtn').addEventListener('click', () => {
     const formContainer = document.getElementById('addListingFormContainer');
     formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
 });
 
-    document.getElementById('addListingForm').addEventListener('submit', async (e) => {
+document.getElementById('addListingForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const body = Object.fromEntries(formData.entries());
 
     const res = await fetch('/profile/listings/add', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-});
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+    });
 
     const msg = document.getElementById('addListingMessage');
     if (res.ok) {
-    msg.textContent = 'Listing added successfully';
-    e.target.reset();
-    loadMyListings();
-} else {
-    msg.textContent = 'Failed to add listing';
-}
+        msg.textContent = 'Listing added successfully';
+        e.target.reset();
+        loadMyListings();
+    } else {
+        msg.textContent = 'Failed to add listing';
+    }
 });
 
-    async function loadMyListings() {
+async function loadMyListings() {
     const res = await fetch('/profile/listings');
     const listings = await res.json();
     const container = document.getElementById('myListings');
     container.innerHTML = '';
 
     if (listings.length === 0) {
-    container.innerHTML = '<p>You have no listings yet.</p>';
-    return;
-}
+        container.innerHTML = '<p>You have no listings yet.</p>';
+        return;
+    }
 
     listings.forEach(listing => {
-    const item = document.createElement('div');
-    item.innerHTML = `
+        const item = document.createElement('div');
+        item.innerHTML = `
         <strong>${listing.title}</strong> (${listing.brand}) - $${listing.price} - Stock: ${listing.stock}
         <br>Status: ${listing.disabled ? 'Disabled' : 'Enabled'}
         <br>
@@ -83,24 +82,24 @@
         <button onclick="deleteListing('${listing._id}')">Delete</button>
         <hr>
       `;
-    container.appendChild(item);
-});
+        container.appendChild(item);
+    });
 }
 
-    async function toggleListing(id) {
-    const res = await fetch(`/profile/listings/${id}/toggle`, { method: 'POST' });
+async function toggleListing(id) {
+    const res = await fetch(`/profile/listings/${id}/toggle`, {method: 'POST'});
     if (res.ok) loadMyListings();
 }
 
-    async function deleteListing(id) {
+async function deleteListing(id) {
     if (!confirm('Are you sure you want to delete this listing?')) return;
-    const res = await fetch(`/profile/listings/${id}/delete`, { method: 'POST' });
+    const res = await fetch(`/profile/listings/${id}/delete`, {method: 'POST'});
     if (res.ok) loadMyListings();
 }
 
-    loadMyListings();
+loadMyListings();
 
-    async function loadSellerComments() {
+async function loadSellerComments() {
     const res = await fetch('/profile/comments-on-my-listings');
     const data = await res.json();
 
@@ -108,23 +107,23 @@
     container.innerHTML = '';
 
     if (data.length === 0) {
-    container.innerHTML = '<p>You have not listed any phones yet.</p>';
-    return;
-}
+        container.innerHTML = '<p>You have not listed any phones yet.</p>';
+        return;
+    }
 
     data.forEach(listing => {
-    const phoneTitle = listing.phoneTitle;
-    const phoneId = listing.phoneId;
+        const phoneTitle = listing.phoneTitle;
+        const phoneId = listing.phoneId;
 
-    const section = document.createElement('div');
-    section.innerHTML = `<h4>${phoneTitle}</h4>`;
+        const section = document.createElement('div');
+        section.innerHTML = `<h4>${phoneTitle}</h4>`;
 
-    if (listing.reviews.length === 0) {
-    section.innerHTML += '<p>No comments yet.</p>';
-} else {
-    listing.reviews.forEach((r, idx) => {
-    const div = document.createElement('div');
-    div.innerHTML = `
+        if (listing.reviews.length === 0) {
+            section.innerHTML += '<p>No comments yet.</p>';
+        } else {
+            listing.reviews.forEach((r, idx) => {
+                const div = document.createElement('div');
+                div.innerHTML = `
           <p>
             ★ ${r.rating} - ${r.comment}
             ${r.hidden ? '<em>(Hidden)</em>' : ''}
@@ -133,22 +132,46 @@
             </button>
           </p>
         `;
-    section.appendChild(div);
-});
+                section.appendChild(div);
+            });
+        }
+
+        container.appendChild(section);
+        container.appendChild(document.createElement('hr'));
+    });
 }
 
-    container.appendChild(section);
-    container.appendChild(document.createElement('hr'));
-});
-}
-
-    async function toggleReview(phoneId, index) {
+async function toggleReview(phoneId, index) {
     const res = await fetch(`/profile/comments/${phoneId}/${index}/toggle`, {
-    method: 'POST'
-});
+        method: 'POST'
+    });
     if (res.ok) {
-    loadSellerComments();
-}
+        loadSellerComments();
+    }
 }
 
-    loadSellerComments();
+loadSellerComments();
+
+async function loadWishlist() {
+    const res = await fetch('/profile/wishlist');
+    const data = await res.json();
+    const container = document.getElementById('wishlistContainer');
+    container.innerHTML = '';
+
+    if (data.length === 0) {
+    container.innerHTML = '<p>Your wishlist is empty.</p>';
+    return;
+}
+
+    data.forEach(item => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <strong>${item.title}</strong> (${item.brand}) - $${item.price}
+      <br>Status: ${item.available ? 'Available' : 'Unavailable'}
+      <hr>
+    `;
+    container.appendChild(div);
+});
+}
+
+loadWishlist();

@@ -141,3 +141,15 @@ exports.toggleCommentHiddenStatus = async (req, res) => {
 
   res.send('Comment visibility toggled');
 };
+
+exports.getMyWishlist = async (req, res) => {
+    const user = await User.findById(req.user._id).populate('wishlist.item');
+    const wishlist = user.wishlist.map(entry => ({
+        id: entry.item._id,
+        title: entry.item.title,
+        brand: entry.item.brand,
+        price: entry.item.price,
+        available: entry.isAvailable
+    }));
+    res.json(wishlist);
+};
