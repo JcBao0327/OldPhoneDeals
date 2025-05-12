@@ -11,6 +11,7 @@ const dotenv = require('dotenv');
 const YAML = require('yamljs');
 const authRoutes = require('./routes/authRoute');
 const checkOutRoute = require('./routes/checkOutRoute');
+const profileRoute = require('./routes/profileRoute');
 
 // Custom Utils
 const connectDB = require('./models/db');
@@ -62,10 +63,11 @@ const jwtSecret = config.jwtSecret;
 // Routes
 app.use('/auth', authRoutes);
 app.use('/checkout', checkOutRoute);
-
+app.use('/profile', profileRoute);
 
 // Start Server
 const PORT = config.app.port || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+

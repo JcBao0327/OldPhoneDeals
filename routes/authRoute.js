@@ -32,4 +32,6 @@ router.post('/reset/:token', authController.handleResetPwd);
 // Email-verified page (GET) - render EJS template
 router.get('/verify', authController.handleEmailVerification);
 
+router.get('/signout', authController.signout);
+
 module.exports = router;

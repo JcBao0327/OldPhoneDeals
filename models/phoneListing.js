@@ -84,6 +84,45 @@ phoneSchema.statics.searchPhones = async function (keyword) {
   });
 };
 
+/**
+ * These Listing refers to Phone. i.e. a listing is a phone
+ */
+phoneSchema.statics.createListing = async function (data) {
+  return await this.create(data);
+};
+
+phoneSchema.statics.updateListingByOwner = async function (phoneId, userId, updateFields) {
+  return await this.findOneAndUpdate(
+      { _id: phoneId, seller: userId },
+      updateFields,
+      { new: true }
+  );
+};
+
+phoneSchema.statics.deleteListingByOwner = async function (phoneId, userId) {
+  return await this.findOneAndDelete({ _id: phoneId, seller: userId });
+};
+
+phoneSchema.statics.getListingsByUser = async function (userId) {
+  return await this.find({ seller: userId });
+};
+
+
+// Get all reviews for a phone listing by UserID 
+phoneSchema.statics.getListingsWithReviewsBySeller = async function (sellerId) {
+  return await this.find({ seller: sellerId }).lean();
+};
+
+// Switch if one comment is hidden
+phoneSchema.statics.toggleReviewHiddenStatus = async function (phoneId, reviewIndex) {
+  const listing = await this.findById(phoneId);
+  if (!listing || !listing.reviews || listing.reviews.length <= reviewIndex) {
+    return null;
+  }
+
+  listing.reviews[reviewIndex].hidden = !listing.reviews[reviewIndex].hidden;
+  return await listing.save();
+};
 
 
 module.exports = mongoose.model('PhoneListing', phoneSchema);

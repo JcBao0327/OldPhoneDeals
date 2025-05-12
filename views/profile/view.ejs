@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/profile.css">
+    <meta charset="UTF-8">
+    <title>Your Profile</title>
+</head>
+<body>
+<h1>Welcome, <%= user.firstname %> <%= user.lastname %></h1>
+<p><strong>Email:</strong> <%= user.email %></p>
+
+<div class="tabs">
+    <div class="tab-btn active" data-tab="edit">Edit Profile</div>
+    <div class="tab-btn" data-tab="password">Change Password</div>
+    <div class="tab-btn" data-tab="listings">Manage Listings</div>
+    <div class="tab-btn" data-tab="comments">View My Comments</div>
+</div>
+
+<div id="edit" class="tab-content active">
+    <h3>Edit Profile</h3>
+    <form action="/profile/edit" method="POST">
+        <label>First Name: <input type="text" name="firstname" value="<%= user.firstname %>" required /></label><br />
+        <label>Last Name: <input type="text" name="lastname" value="<%= user.lastname %>" required /></label><br />
+        <label>Email: <input type="email" name="email" value="<%= user.email %>" required /></label><br />
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div id="password" class="tab-content">
+    <h3>Change Password</h3>
+    <form id="changePasswordForm">
+        <label>Current Password:
+            <input type="password" name="currentPassword" required />
+        </label><br />
+        <label>New Password:
+            <input type="password" name="newPassword" required />
+        </label><br />
+        <button type="submit">Change Password</button>
+    </form>
+
+    <p id="passwordMessage" style="color: green;"></p>
+</div>
+
+<div id="listings" class="tab-content">
+    <h3>Manage Your Listings</h3>
+    <button id="showAddFormBtn">+ Add New Listing</button>
+    
+    <div id="addListingFormContainer" style="display:none; margin-top:1rem;">
+      <form id="addListingForm">
+        <input type="text" name="title" placeholder="Title" required /><br />
+        <input type="text" name="brand" placeholder="Brand" required /><br />
+        <input type="number" name="price" placeholder="Price" required /><br />
+        <input type="number" name="stock" placeholder="Stock" required /><br />
+        <input type="text" name="image" placeholder="Image URL" /><br />
+        <button type="submit">Save Listing</button>
+      </form>
+      <p id="addListingMessage" style="color: green;"></p>
+    </div>
+    
+    <div id="myListings" style="margin-top:2rem;"></div>
+</div>
+
+<div id="comments" class="tab-content">
+    <h3>Comments on My Listings</h3>
+    <div id="commentsContainer">Loading comments...</div>
+</div>
+
+<br />
+<a href="/auth/signout">Logout</a>
+
+
+<script src="/js/profile.js"></script>
+</body>
+</html>
