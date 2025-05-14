@@ -1,3 +1,469 @@
+/* Top Bar */
+#top-bar {
+    background-color: black; /*  black top bar */
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+  
+  /* Left: Logo (Blue and clickable) */
+  #top-bar .nav-left h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: bold;
+  }
+  
+  #top-bar .nav-left h1 a {
+    color: #007bff; /*  Bootstrap blue */
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  #top-bar .nav-left h1 a:hover {
+    color: #66b2ff;
+    text-decoration: underline;
+  }
+  
+  /* Middle: Search bar + button (optional styles to match) */
+  #top-bar .nav-mid {
+    display: flex;
+    gap: 10px;
+  }
+  
+  #search-bar {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    width: 250px;
+  }
+  
+  #search-button {
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Right: Buttons (blue bg, white text) */
+  #top-bar .nav-right {
+    display: flex;
+    gap: 10px;
+  }
+  
+  #top-bar .nav-btn {
+    background-color: #007bff; /*  blue buttons */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  #top-bar .nav-btn:hover {
+    background-color: #0056b3; /* darker blue on hover */
+  }
+  
+
+  /* Section headers */
+#best-sellers-section,
+#sold-out-soon-section {
+  text-align: center;
+  margin: 40px auto;
+}
+
+#best-sellers-section h2,
+#sold-out-soon-section h2 {
+  font-size: 24px;
+  color: #001f3f;
+  margin-bottom: 20px;
+}
+
+/* Grid layout for phone listings */
+.listing-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Listing card */
+.listing-card {
+  width: 220px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.listing-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.listing-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.listing-title {
+  font-size: 16px;
+  margin: 10px 0 5px 0;
+  color: #111;
+}
+
+.listing-price {
+  font-weight: bold;
+  color: #0074D9;
+}
+
+/* Expand slider size and align it visually */
+#price-slider {
+    width: 300px;
+    margin: 0 10px;
+  }
+  
+  #filter-content {
+    display: flex;
+    flex-wrap: wrap; /*  wrap when needed */
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: #f4f4f4;
+    padding: 20px 30px;
+    border-radius: 10px;
+    max-width: 1000px;
+    margin: 30px auto;
+  }
+  
+  /* Ensure each label + control sits together */
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 180px;
+  }
+  
+  /* Improve noUiSlider appearance */
+  .noUi-target {
+    background: #ccc;
+    border-radius: 5px;
+    border: 1px solid #999;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    height: 10px;
+  }
+  
+  .noUi-connect {
+    background: #007bff;
+  }
+  
+  .noUi-handle {
+    background: white;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    cursor: grab;
+    width: 18px;
+    height: 18px;
+    top: -5px;
+  }
+  
+  .noUi-tooltip {
+    background: #007bff;
+    color: white;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  
+  #filter-content label {
+    font-weight: bold;
+    color: #001f3f;
+  }
+  
+  #brand-filter,
+  #sort-option {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-width: 180px;
+  }
+  
+  /* Price slider itself — make it wider */
+  #filter-content input[type="range"] {
+    width: 250px;
+    margin: 0 10px;
+  }
+  
+  /* Price text display */
+  .price-display {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  
+  /* Sort dropdown */
+  #sort-option {
+    margin-left: 10px;
+  }
+  
+/* Pagination container */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+  }
+  
+  /* Each page item */
+  .page-item {
+    display: inline;
+  }
+  
+  /* Page link buttons */
+  .page-link {
+    display: inline-block;
+    padding: 6px 12px;
+    color: #007bff;
+    background-color: white;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .page-link:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Optional: style for active page */
+  .page-item.active .page-link {
+    background-color: #0056b3;
+    color: white;
+    pointer-events: none;
+    border-color: #0056b3;
+  }
+  #result-range {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+/* Section: Item Info */
+#item-info {
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  #item-info img {
+    max-width: 250px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 6px;
+  }
+  
+  #item-info h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #001f3f;
+  }
+  
+  #item-info p {
+    margin: 4px 0;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  #item-seller-id {
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+  }
+  
+  /* Section: Purchase Controls */
+  #purchase-controls {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  #purchase-controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    margin: 10px 10px 0;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  #purchase-controls button:hover {
+    background-color: #0056b3;
+  }
+  
+  #purchase-controls p {
+    margin: 10px 0;
+    font-weight: bold;
+    color: #001f3f;
+  }
+  
+  #cart-count,
+  #wishlist-status {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+/* Review section layout */
+#review-section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Section title */
+  #review-section h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #001f3f;
+  }
+  
+  /* Review form styling */
+  #review-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 25px;
+  }
+  
+  #review-rating {
+    padding: 6px;
+    font-size: 14px;
+  }
+  
+  #review-comment {
+    flex-grow: 1;
+    min-width: 100%;
+    height: 60px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+  }
+  
+  #review-form label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  #review-form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  #review-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Review items */
+  .review-item {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .review-item strong {
+    color: #001f3f;
+  }
+  
+  .review-comment {
+    color: #111;
+    margin: 8px 0;
+  }
+  
+  /* Hidden comment styling */
+  .review-comment.hidden {
+    color: #888;
+    font-style: italic;
+  }
+  
+  /* Short/Full toggle */
+  .toggle-comment {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    margin-top: 4px;
+  }
+  
+  .toggle-comment:hover {
+    text-decoration: underline;
+  }
+  
+  /* Load more / Show less */
+  .review-actions {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .review-actions button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .review-actions button:hover {
+    background-color: #0056b3;
+  }
+    
+
+
 .review-comment {
     color: black;
 }
