@@ -1,0 +1,8 @@
+.review-comment {
+    color: black;
+}
+  
+.review-comment.hidden {
+    color: grey;
+    font-style: italic;
+}

@@ -12,6 +12,9 @@ const YAML = require('yamljs');
 const authRoutes = require('./routes/authRoute');
 const checkOutRoute = require('./routes/checkOutRoute');
 const profileRoute = require('./routes/profileRoute');
+const homeRoutes = require('./routes/homeRoute');
+const phoneRoutes = require('./routes/phoneRoute');
+const reviewRoutes = require('./routes/reviewRoute');
 
 // Custom Utils
 const connectDB = require('./models/db');
@@ -64,6 +67,9 @@ const jwtSecret = config.jwtSecret;
 app.use('/auth', authRoutes);
 app.use('/checkout', checkOutRoute);
 app.use('/profile', profileRoute);
+app.use('/', homeRoutes);
+app.use('/phones', phoneRoutes);
+app.use('/reviews', reviewRoutes);
 
 // Start Server
 const PORT = config.app.port || 3000;

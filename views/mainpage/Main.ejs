@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OldPhoneDeals</title>
+<!--  <link rel="stylesheet" href="/styles/main.css">-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header id="top-bar" class="d-flex justify-content-between align-items-center">
+    <div class="nav-left">
+      <h1 id="web-logo">OldPhoneDeals</h1>
+    </div>
+    <div class="nav-mid">
+      <input type="text" id="search-bar" placeholder="Search phones...">
+      <button id="search-button">Search</button>
+    </div>
+    <div class="nav-right">
+      <button id="cart-button" class="nav-btn">Cart</button>
+      <button id="signin-button" class="nav-btn">Sign In</button>
+      <button id="profile-button" class="nav-btn" style="display:none">Profile</button>
+      <button id="signout-button" class="nav-btn" style="display:none">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <div id="home-state"><%- include('partials/home-state') %></div>
+    <div id="search-state" style="display:none"><%- include('partials/search-state') %></div>
+    <div id="item-state" style="display:none"><%- include('partials/item-state') %></div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+</body>
+</html>
