@@ -1,0 +1,40 @@
+<!-- Item Detail State -->
+<section id="item-info">
+    <img id="item-image" src="" alt="Phone Image">
+    <h2 id="item-title"></h2>
+    <p id="item-brand"></p>
+    <p id="item-price"></p>
+    <p id="item-stock"></p>
+    <p id="item-seller-id" ></p>
+    <p id="item-seller-name"></p>
+  </section>
+  
+  <div id="purchase-controls">
+    <button id="add-to-cart-button">Add to Cart</button>
+    <button id="add-to-wishlist-button">Add to Wishlist</button>
+    <p>Currently added to cart: <span id="cart-count">0</span></p>
+    <p>Wishlist status: <span id="wishlist-status">Not added</span></p>
+  </div>
+  
+  <section id="review-section">
+    <h3>Reviews</h3>
+    
+    <form id="review-form">
+      <select id="review-rating">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select>
+      <textarea id="review-comment" placeholder="Your comment..."></textarea>
+      <label>
+        <input type="checkbox" id="review-hidden"> Hidden comment
+      </label>
+      <button type="submit">Post Review</button>
+    </form>
+  
+    <div id="review-list">
+      <!-- Reviews dynamically inserted -->
+    </div>
+  </section>

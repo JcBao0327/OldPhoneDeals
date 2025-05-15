@@ -1,0 +1,34 @@
+<!-- Search State -->
+<section id="filter-content">
+    <label for="brand-filter">Brand:</label>
+    <select id="brand-filter">
+        <option value="">All</option>
+        <!-- Options dynamically filled -->
+    </select>
+
+    <label id="price-label" class="slider-label">Price Range:</label>
+    <div id="price-slider" class="slider-track" role="slider" aria-labelledby="price-label" tabindex="0"></div>
+    <p class="price-display">
+        <span>Price:</span>
+        $<span id="price-min">0</span>
+        - 
+        $<span id="price-max">1000</span>
+    </p>
+
+    <label for="sort-option">Sort:</label>
+    <select id="sort-option">
+        <option value="price_asc">Price Low to High</option>
+        <option value="price_desc">Price High to Low</option>      
+    </select>
+</section>
+  
+<section id="search-results" class="listing-grid">
+<!-- Search Results Injected Here -->
+</section>
+  
+<nav id="pagination-container" aria-label="Search page navigation">
+    <ul class="pagination justify-content-center">
+        <!-- Pagination links injected here -->
+    </ul>
+    <p id="result-range" class="text-muted"></p>
+</nav>
