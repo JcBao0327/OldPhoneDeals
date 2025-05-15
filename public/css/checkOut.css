@@ -32,7 +32,7 @@ p {
 }
 
 main {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 2rem auto;
     padding: 1rem;
     background-color: #ffffff;
@@ -46,6 +46,7 @@ table {
     margin-top: 1rem;
 }
 
+
 th, td {
     padding: 0.75rem;
     text-align: center;
@@ -55,6 +56,14 @@ th, td {
 th {
     background-color: #c3cdd8;
 }
+
+/* td:nth-child(3) {
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} */
+
 
 .cart-item input.quantity-input {
     width: 60px;

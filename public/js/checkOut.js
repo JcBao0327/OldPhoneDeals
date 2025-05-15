@@ -51,11 +51,14 @@ async function handleUpdateQuantity(itemId) {
     function recalculateTotal() {
         let total = 0;
         document.querySelectorAll('.cart-item').forEach(item => {
-            const price = parseFloat(item.getAttribute('data-price'));
-            const quantityInput = item.querySelector('.quantity-input');
-            const quantity = parseInt(quantityInput.value);
-            if (!isNaN(price) && !isNaN(quantity)) {
-                total += price * quantity;
+            const checkbox = item.querySelector('input[name="itemCheckbox"]');
+            if (checkbox && checkbox.checked) {
+                const price = parseFloat(item.getAttribute('data-price'));
+                const quantityInput = item.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+                if (!isNaN(price) && !isNaN(quantity)) {
+                    total += price * quantity;
+                }
             }
         });
 
