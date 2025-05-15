@@ -61,7 +61,7 @@ const adminUsername = config.admin.username;
 const adminPassword = config.admin.password;
 
 // Get JWT Secret Key
-const jwtSecret = config.jwtSecret; 
+const jwtSecret = config.jwtSecret;
 
 // Routes
 app.use('/auth', authRoutes);
