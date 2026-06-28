@@ -347,4 +347,5 @@ userSchema.statics.findByVerificationToken = function (token) {
 userSchema.statics.findByresetPasswordToken = function (token) {
   return this.findOne({ resetPasswordToken: token });
 };
+
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);
